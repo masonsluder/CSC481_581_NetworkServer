@@ -1,4 +1,5 @@
 #include <zmq.hpp>
+#include <SDL.h>
 #include <iostream>
 #include <string>
 #include <chrono>
@@ -11,6 +12,9 @@
 * Created from tutorials within: https://zguide.zeromq.org/docs/chapter1/, https://zguide.zeromq.org/docs/chapter4/, and https://zguide.zeromq.org/docs/chapter5/
 */
 int main(int argc, char* argv[]) {
+
+    
+
     std::cout << "Running server.\n";
     // Set up ZMQ context and sockets
     zmq::context_t context(2);
@@ -26,6 +30,15 @@ int main(int argc, char* argv[]) {
     std::cout << "Server is running..." << std::endl;
 
     while (true) {
+        // Gets the current state of the keyboard
+        const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
+
+        // Terminates the application if the Escape key is pressed
+        if (keyboardState[SDL_SCANCODE_ESCAPE]) {
+            zmq_ctx_destroy((void*)context);
+            exit(0);
+        }
+
         // Receive player updates from clients
         zmq::message_t request;
         rep_socket.recv(request, zmq::recv_flags::none);
