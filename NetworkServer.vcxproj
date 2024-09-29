@@ -134,9 +134,6 @@
   <ItemGroup>
     <ClCompile Include="NetworkServer.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="zhelpers.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

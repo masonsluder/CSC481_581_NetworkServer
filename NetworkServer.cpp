@@ -21,7 +21,7 @@ typedef struct {
 int main(int argc, char* argv[]) {
 
     // Initialize list of Client Iteration trackers
-    std::list<ClientIteration> clientList = std::list<ClientIteration>();
+    std::vector<ClientIteration> clientList = std::vector<ClientIteration>();
 
     std::cout << "Running server.\n";
     // initialize the zmq context with a single IO thread
@@ -47,10 +47,12 @@ int main(int argc, char* argv[]) {
 
         // REQ model ready to receive requests from the client.
         zmq::message_t clientIdRequest;
-        reply.recv(clientIdRequest, zmq::recv_flags::none);
+        reply.recv(clientIdRequest, zmq::recv_flags::dontwait);
 
-        // Print request information from client
-        std::cout << "Publisher: [" << clientIdRequest.to_string() << "]\n";
+        if (!clientIdRequest.empty()) {
+            // Print request information from client
+            std::cout << "Publisher: [" << clientIdRequest.to_string() << "]\n";
+        }
 
         // If the client sends a request, start handling sending the reply
         if (!clientIdRequest.empty()) {
@@ -75,14 +77,14 @@ int main(int argc, char* argv[]) {
 
             std::this_thread::sleep_for(std::chrono::seconds(1));
             // Handle publishing to clients (in their branch using each of their identifiers)
-            publisher.send(zmq::str_buffer(clientIdentifier), zmq::send_flags::sndmore);
-            publisher.send(zmq::str_buffer("Message in status"));
+            //publisher.send(zmq::str_buffer(clientIdentifier), zmq::send_flags::sndmore);
+            //publisher.send(zmq::str_buffer("Message in status"));
         }
 
         // Iterate throught the list of clients and broadcast each of their iteration numbers to each of the clients
-        std::cout << "Iterating through ClientIterations\n";
+        //std::cout << "Iterating through ClientIterations\n";
         for (ClientIteration client : clientList) {
-            std::cout << "Looping: " << client.m_id << "\n";
+            //std::cout << "Looping: " << client.m_id << "\n";
             // Creates stringstream for string building
             std::stringstream ss;
             // Prints out Client X: Iteration Y, then increments Y
@@ -90,7 +92,7 @@ int main(int argc, char* argv[]) {
             client.m_iteration++;
             // Broadcast message to clients
             zmq::message_t iterationStr(ss.str());
-            publisher.send(iterationStr, zmq::send_flags::none);
+            publisher.send(iterationStr, zmq::send_flags::dontwait);
         }
 
         /*if (client_joins()) {
