@@ -132,7 +132,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="NetworkServer.cpp" />
+    <ClCompile Include="networkServer.cpp" />
+    <ClCompile Include="networkThread.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="networkthread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
