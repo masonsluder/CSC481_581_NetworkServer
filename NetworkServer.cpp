@@ -77,19 +77,19 @@ int main(int argc, char* argv[]) {
 
             std::this_thread::sleep_for(std::chrono::seconds(1));
             // Handle publishing to clients (in their branch using each of their identifiers)
-            //publisher.send(zmq::str_buffer(clientIdentifier), zmq::send_flags::sndmore);
-            //publisher.send(zmq::str_buffer("Message in status"));
+            publisher.send(zmq::str_buffer(clientIdentifier), zmq::send_flags::sndmore);
+            publisher.send(zmq::str_buffer("Information to give to client"));
         }
 
         // Iterate throught the list of clients and broadcast each of their iteration numbers to each of the clients
         //std::cout << "Iterating through ClientIterations\n";
-        for (ClientIteration client : clientList) {
+        for (ClientIteration& client : clientList) {
             //std::cout << "Looping: " << client.m_id << "\n";
+			client.m_iteration += 1;
             // Creates stringstream for string building
             std::stringstream ss;
             // Prints out Client X: Iteration Y, then increments Y
             ss << "Client " << client.m_id << ": " << "Iteration " << client.m_iteration << "\n";
-            client.m_iteration++;
             // Broadcast message to clients
             zmq::message_t iterationStr(ss.str());
             publisher.send(iterationStr, zmq::send_flags::dontwait);
@@ -99,6 +99,8 @@ int main(int argc, char* argv[]) {
             publisher.send(clientIdentifierCounter);
             clientIdentifierCounter++;
         }*/
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
     return 0;
