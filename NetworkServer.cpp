@@ -13,8 +13,6 @@
 */
 int main(int argc, char* argv[]) {
 
-    
-
     std::cout << "Running server.\n";
     // Set up ZMQ context and sockets
     zmq::context_t context(2);
