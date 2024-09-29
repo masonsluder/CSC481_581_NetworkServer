@@ -1,67 +1,102 @@
 #include <zmq.hpp>
+#include <zmq_addon.hpp>
 #include <SDL.h>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <chrono>
 #include <thread>
 #include <unordered_map>
 
-/*
-* TODO Server-side code with main loop. (I am not sure how to run this and test it as of now)
-* Broadcasts updated positions of all players to all clients using PUB-SUB pattern
-* Created from tutorials within: https://zguide.zeromq.org/docs/chapter1/, https://zguide.zeromq.org/docs/chapter4/, and https://zguide.zeromq.org/docs/chapter5/
-*/
+//#include "zhelpers.hpp"
+
+int clientIteration = 0;
+int clientIdentifierCounter = 0;
+
+typedef struct {
+    int m_id;
+    int m_iteration;
+} ClientIteration;
+
 int main(int argc, char* argv[]) {
 
+    // Initialize list of Client Iteration trackers
+    std::list<ClientIteration> clientList = std::list<ClientIteration>();
+
     std::cout << "Running server.\n";
-    // Set up ZMQ context and sockets
-    zmq::context_t context(2);
+    // initialize the zmq context with a single IO thread
+    zmq::context_t context{ 2 };
 
-    // REP socket for receiving player updates from clients
-    zmq::socket_t rep_socket(context, zmq::socket_type::rep); // REQ-REP
-    rep_socket.bind("tcp://*:5555");  // Server binds to port 5555 for requests
+    // construct a PUB (publisher) socket and connect to interface
+    zmq::socket_t publisher{ context, zmq::socket_type::pub };
+    publisher.bind("tcp://*:5555");
 
-    // PUB socket for broadcasting game state to all clients
-    zmq::socket_t pub_socket(context, zmq::socket_type::pub); // PUB-SUB
-    pub_socket.bind("tcp://*:5556");  // Server publishes updates to port 5556
+    // construct a REP (reply) socket
+    zmq::socket_t reply{ context, zmq::socket_type::rep };
+    reply.bind("tcp://*:5556");
+    //reply.set(zmq::sockopt::subscribe, "Subscribe");
 
-    std::cout << "Server is running..." << std::endl;
-
+    // Send out multipart messages forever
     while (true) {
-        // Gets the current state of the keyboard
         const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
-
-        // Terminates the application if the Escape key is pressed
         if (keyboardState[SDL_SCANCODE_ESCAPE]) {
+            SDL_Quit();  // Clean up SDL
             zmq_ctx_destroy((void*)context);
             exit(0);
         }
 
-        // Receive player updates from clients
-        zmq::message_t request;
-        rep_socket.recv(request, zmq::recv_flags::none);
+        // REQ model ready to receive requests from the client.
+        zmq::message_t clientIdRequest;
+        reply.recv(clientIdRequest, zmq::recv_flags::none);
 
-        // Parse the request (client ID and position data)
-        std::string request_data(static_cast<char*>(request.data()), request.size());
-        std::stringstream ss(request_data);
-        std::string clientID, positionData;
-        ss >> clientID;
-        std::getline(ss, positionData);
+        // Print request information from client
+        std::cout << "Publisher: [" << clientIdRequest.to_string() << "]\n";
 
-        // Send an acknowledgment back to the client
-        zmq::message_t reply(2);
-        memcpy(reply.data(), "ACK", 2);
-        rep_socket.send(reply, zmq::send_flags::none);
+        // If the client sends a request, start handling sending the reply
+        if (!clientIdRequest.empty()) {
+            clientIdentifierCounter++;
+            std::cout << "Client [" << clientIdentifierCounter << "] connected.\n";
 
-        // Serialize the current game state and broadcast it to all clients
-        std::string game_state = "Game state"; // Iteration here
-        //zmq::message_t game_state_msg(game_state.c_str(), game_state.size());
-        //pub_socket.send(game_state_msg, zmq::send_flags::none);
+            // Add new client to list of clients
+            clientList.push_back(ClientIteration() = { clientIdentifierCounter, 0 });
 
-        zmq_send(pub_socket, "Game state", game_state.size(), ZMQ_SNDMORE);
+            std::string clientString = std::to_string(clientIdentifierCounter);
 
-        // Simulate a game tick
-        std::this_thread::sleep_for(std::chrono::milliseconds(16));  // Approx 60fps
+            // Send back to the client
+            zmq::message_t msg(clientString);
+            reply.send(msg, zmq::send_flags::none);
+
+            // TODO Create new thread for newly connected client
+
+            // Cast clientIdentifierCounter to a char array to send to client
+            char clientIdentifier[2];
+            clientIdentifier[0] = static_cast<char>(clientIdentifierCounter + 48);
+            clientIdentifier[1] = '\0';
+
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            // Handle publishing to clients (in their branch using each of their identifiers)
+            publisher.send(zmq::str_buffer(clientIdentifier), zmq::send_flags::sndmore);
+            publisher.send(zmq::str_buffer("Message in status"));
+        }
+
+        // Iterate throught the list of clients and broadcast each of their iteration numbers to each of the clients
+        std::cout << "Iterating through ClientIterations\n";
+        for (ClientIteration client : clientList) {
+            std::cout << "Looping: " << client.m_id << "\n";
+            // Creates stringstream for string building
+            std::stringstream ss;
+            // Prints out Client X: Iteration Y, then increments Y
+            ss << "Client " << client.m_id << ": " << "Iteration " << client.m_iteration << "\n";
+            client.m_iteration++;
+            // Broadcast message to clients
+            zmq::message_t iterationStr(ss.str());
+            publisher.send(iterationStr, zmq::send_flags::none);
+        }
+
+        /*if (client_joins()) {
+            publisher.send(clientIdentifierCounter);
+            clientIdentifierCounter++;
+        }*/
     }
 
     return 0;
