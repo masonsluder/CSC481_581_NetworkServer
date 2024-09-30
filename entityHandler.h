@@ -54,6 +54,11 @@ public:
 	void addMovingEntity(Entities::MovingEntity e);
 
 	/**
+	* Writes a serialized string containing all entities: players, then moving entities
+	*/
+	std::string toString();
+
+	/**
 	* Frees any allocated memory
 	*/
 	void cleanUp();

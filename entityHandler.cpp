@@ -1,3 +1,4 @@
+#include <sstream>
 #include "entityHandler.h"
 
 EntityHandler::EntityHandler() {
@@ -19,7 +20,7 @@ void EntityHandler::updateEntities() {
 	*
 	* @param entityListString
 	*/
-void EntityHandler::updatePlayersByString(std::string entityListString) {
+void EntityHandler::updatePlayersByString(std::string playerListString) {
 
 }
 
@@ -42,6 +43,24 @@ void EntityHandler::addPlayer(Entities::Player p) {
  */
 void EntityHandler::addMovingEntity(Entities::MovingEntity e) {
 	m_movingEntities->emplace_back(e);
+}
+
+std::string EntityHandler::toString() {
+	// Create stringstream
+	std::stringstream ss;
+	// Iterate through player list and add them
+	std::list<Entities::Player>::iterator playIter;
+	for (playIter = (*m_players).begin(); playIter != (*m_players).end(); ++playIter) {
+		ss << "*" << playIter->toString();
+	}
+
+	ss << "+";
+
+	std::list<Entities::MovingEntity>::iterator movIter;
+	// Iterate through each MovingEntity
+	for (movIter = (*m_movingEntities).begin(); movIter != (*m_movingEntities).end(); ++movIter) {
+		s << "*" << playIter->i;
+	}
 }
 
 void EntityHandler::cleanUp() {
