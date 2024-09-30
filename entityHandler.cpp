@@ -1,11 +1,15 @@
 #include <sstream>
 #include <map>
+
 #include "entityHandler.h"
+#include "NetworkMovingEntity.h"
+#include "NetworkEntity.h"
 
 EntityHandler::EntityHandler() {
 	// creates empty entities list
 	m_players = new std::map<int, Entities::Player>();
 	m_movingEntities = new std::map<int, Entities::MovingEntity>();
+	m_staticEntities = new std::map<int, Entities::Entity>();
 	m_timeline = Timeline();
 }
 
@@ -59,7 +63,7 @@ std::string EntityHandler::toString() {
 	// Iterate through player list and add them to the string
 	std::map<int, Entities::Player>::iterator playIter;
 	for (playIter = m_players->begin(); playIter != m_players->end(); ++playIter) {
-		ss << "*" << playIter->second.toString();
+		ss << "*" << playIter->second.toString() << "\n";
 	}
 	// Separate entity types with '+'
 	ss << "+";
@@ -67,8 +71,37 @@ std::string EntityHandler::toString() {
 	std::map<int, Entities::MovingEntity>::iterator movIter;
 	// Iterate through each MovingEntity and add them to the string
 	for (movIter = m_movingEntities->begin(); movIter != m_movingEntities->end(); ++movIter) {
-		ss << "*" << movIter->second.toString();
+		ss << "*" << movIter->second.toString() << "\n";
 	}
+	return ss.str();
+}
+
+std::string EntityHandler::toStringAll() {
+	// Create stringstream
+	std::stringstream ss;
+	// Iterate through player list and add them to the string
+	std::map<int, Entities::Player>::iterator playIter;
+	for (playIter = m_players->begin(); playIter != m_players->end(); ++playIter) {
+		ss << "*" << playIter->second.toString() << "\n";
+	}
+	// Separate entity types with '+'
+	ss << "+";
+
+	std::map<int, Entities::MovingEntity>::iterator movIter;
+	// Iterate through each MovingEntity and add them to the string
+	for (movIter = m_movingEntities->begin(); movIter != m_movingEntities->end(); ++movIter) {
+		ss << "*" << movIter->second.toString() << "\n";
+	}
+
+	// Separate entity types with '+'
+	ss << "+";
+
+	std::map<int, Entities::Entity>::iterator statIter;
+	// Iterate through each static Entity and add them to the string
+	for (statIter = m_staticEntities->begin(); statIter != m_staticEntities->end(); ++statIter) {
+		ss << "*" << statIter->second.toString() << "\n";
+	}
+	return ss.str();
 }
 
 void EntityHandler::cleanUp() {
