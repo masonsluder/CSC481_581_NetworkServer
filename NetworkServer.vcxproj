@@ -132,18 +132,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="networkEntity.cpp" />
     <ClCompile Include="entityHandler.cpp" />
+    <ClCompile Include="networkMovingEntity.cpp" />
     <ClCompile Include="networkServer.cpp" />
     <ClCompile Include="networkThread.cpp" />
+    <ClCompile Include="networkPlayer.cpp" />
+    <ClCompile Include="networkTimeline.cpp" />
+    <ClCompile Include="networkVector2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="networkEntity.h" />
     <ClInclude Include="entityHandler.h" />
-    <ClInclude Include="networkthread.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CSC481-581-GameEngine\GameEngine.vcxproj">
-      <Project>{2210db69-8012-442b-9c8e-5717bf955066}</Project>
-    </ProjectReference>
+    <ClInclude Include="networkMovingEntity.h" />
+    <ClInclude Include="networkThread.h" />
+    <ClInclude Include="networkPlayer.h" />
+    <ClInclude Include="networkTimeline.h" />
+    <ClInclude Include="networkVector2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

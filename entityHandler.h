@@ -3,9 +3,11 @@
 #include <SDL.h>
 #include <iostream>
 
-#include "../CSC481-581-GameEngine/player.h"
-#include "../CSC481-581-GameEngine/movingEntity.h"
-#include "../CSC481-581-GameEngine/timeline.h"
+#include "networkPlayer.h"
+#include "networkMovingEntity.h"
+#include "networkEntity.h"
+#include "networkTimeline.h"
+#include <map>
 
 #pragma once
 #ifndef ENTITY_HANDLER_H
@@ -20,6 +22,8 @@ private:
 	std::map<int, Entities::Player>* m_players;
 	/** The list of all entities */
 	std::map<int, Entities::MovingEntity>* m_movingEntities;
+	/** The list of all static entities */
+	std::map<int, Entities::Entity>* m_staticEntities;
 	/** Timeline used for movement calculations */
 	Timeline m_timeline;
 
@@ -59,9 +63,14 @@ public:
 	void insertMovingEntity(Entities::MovingEntity e);
 
 	/**
-	* Writes a serialized string containing all entities: players, then moving entities
+	* Writes a serialized string containing entities: players, then moving entities
 	*/
 	std::string toString();
+
+    /**
+    * Writes a serialized string containing all entities: players, then moving entities, then static entities
+    */
+    std::string toStringAll();
 
 	/**
 	* Frees any allocated memory

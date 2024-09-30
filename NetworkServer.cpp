@@ -11,11 +11,10 @@
 
 #include "networkthread.h"
 #include "entityHandler.h"
-#include "../CSC481-581-GameEngine/entity.h"
-#include "../CSC481-581-GameEngine/movingEntity.h"
-#include "../CSC481-581-GameEngine/player.h"
-#include "../CSC481-581-GameEngine/entityController.h"
-#include "../CSC481-581-GameEngine/timeline.h"
+#include "networkEntity.h"
+#include "networkMovingEntity.h"
+#include "networkPlayer.h"
+#include "networkTimeline.h"
 
 typedef struct {
     int m_id;
@@ -60,12 +59,13 @@ int main(int argc, char* argv[]) {
 
     /// Controller for all entities and their physics
     EntityHandler* entityHandler;
+    entityHandler = new EntityHandler();
 
     // Instantiate entities
 	// Create ball object (Temp)
 	Entities::Entity *ball = new Entities::Entity
 	(
-		1.0, 1.0,
+        1.0, 1.0,
 		550.0, 250.0,
 		20.0, 20.0,
 		10.0,
@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
 	// Create box object that moves (Temp)
 	Entities::MovingEntity* movingBox = new Entities::MovingEntity
 	(
-		1.0, 1.0,
+        1.0, 1.0,
 		550.0, 550.0,
 		10.0,
 		50.0f, 50.0f,
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 	);
 	// Create ground object (Temp)
 	Entities::Entity* ground = new Entities::Entity(
-		1.0, 1.0,
+        1.0, 1.0,
 		250.0, 550.0,
 		128.0, 64.0,
 		10.0,
@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 
 	// Create second ground object (Temp)
 	Entities::Entity* platform = new Entities::Entity(
-		1.0, 1.0,
+        1.0, 1.0,
 		350.0, 525.0,
 		64.0, 64.0,
 		10.0,
@@ -178,25 +178,32 @@ int main(int argc, char* argv[]) {
             // Send the identifier back to the client
             zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter));
             replyToClient.send(msg, zmq::send_flags::none);
+            // Send initial starter information on all entities that are to be instantiated
+            zmq::message_t starterInfo("Client: " + entityHandler->toStringAll());
+            serverToClientPublisher.send(starterInfo, zmq::send_flags::none);
         }
+
+        zmq::message_t infoStr("Client\n" + entityHandler->toString());
+
+        serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
 
         // Iterate throught the list of clients and broadcast each of their iteration numbers to each of the clients
         //std::cout << "Iterating through ClientIterations\n";
         for (ClientIteration& client : clientList) {
 
             // Iterate through all of the players/entities data and sync to all clients.
-            std::list<Entities::Entity>::iterator iterEntity;
-            for (iterEntity = entityHandler->getPlayers()->begin(); iterEntity != entityController->getEntities()->end(); ++iterEntity) {
-                std::stringstream ss;
-                ss << " Server\n" /*<< iterEntity.toString()*/;
-                zmq::message_t iterationStr(ss.str());
-                // Send to one client
-                serverToClientPublisher.send(zmq::str_buffer(client.m_identifier), zmq::send_flags::sndmore);
+            //std::list<Entities::Player>::iterator iterEntity;
+            //for (iterEntity = entityHandler->getPlayers()->begin(); iterEntity != entityController->getEntities()->end(); ++iterEntity) {
+            //    std::stringstream ss;
+            //    ss << " Server\n" /*<< iterEntity.toString()*/;
+            //    zmq::message_t iterationStr(ss.str());
+            //    // Send to one client
+            //    serverToClientPublisher.send(zmq::str_buffer(client.m_identifier), zmq::send_flags::sndmore);
 
-                // Send to all clients
-                //serverToClientPublisher.send(zmq::str_buffer("Client"), zmq::send_flags::sndmore);
-                serverToClientPublisher.send(iterationStr, zmq::send_flags::dontwait);
-            }
+            //    // Send to all clients
+            //    //serverToClientPublisher.send(zmq::str_buffer("Client"), zmq::send_flags::sndmore);
+            //    serverToClientPublisher.send(iterationStr, zmq::send_flags::dontwait);
+            //}
             client.m_iteration += 1;
 
 
