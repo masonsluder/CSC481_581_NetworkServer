@@ -21,9 +21,21 @@
     <ClCompile Include="networkThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="deserializer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entityHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="networkthread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="deserializer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entityHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -132,11 +132,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="deserializer.cpp" />
+    <ClCompile Include="entityHandler.cpp" />
     <ClCompile Include="networkServer.cpp" />
     <ClCompile Include="networkThread.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="deserializer.h" />
+    <ClInclude Include="entityHandler.h" />
     <ClInclude Include="networkthread.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSC481-581-GameEngine\GameEngine.vcxproj">
+      <Project>{2210db69-8012-442b-9c8e-5717bf955066}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
