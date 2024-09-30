@@ -1,9 +1,11 @@
 #pragma once
-#include "../CSC481-581-GameEngine/player.h"
-#include "../CSC481-581-GameEngine/movingEntity.h"
 #include <list>
 #include <SDL.h>
 #include <iostream>
+
+#include "../CSC481-581-GameEngine/player.h"
+#include "../CSC481-581-GameEngine/movingEntity.h"
+#include "../CSC481-581-GameEngine/timeline.h"
 
 #pragma once
 #ifndef ENTITY_HANDLER_H
@@ -15,9 +17,12 @@
 class EntityHandler {
 private:
 	/** The list of all players */
-	std::list<Entities::Player>* m_players;
+	std::map<int, Entities::Player>* m_players;
 	/** The list of all entities */
-	std::list<Entities::MovingEntity>* m_movingEntities;
+	std::map<int, Entities::MovingEntity>* m_movingEntities;
+	/** Timeline used for movement calculations */
+	Timeline m_timeline;
+
 public:
 	/**
 	* The constructor for EntityHandler
@@ -34,24 +39,24 @@ public:
 	*
 	* @param entityListString
 	*/
-	void updatePlayersByString(std::string playerListString);
+	void updatePlayerByString(std::string playerString);
 
 	/**
-	* Returns the entities list
+	* Returns the entities map
 	*/
-	std::list<Entities::Player>* getPlayers();
-
-	/**
-	* Adds the given entity to the entities list
-	* @param e entity to be added to end of the entities list
-	*/
-	void addPlayer(Entities::Player p);
+	std::map<int, Entities::Player>* getPlayers();
 
 	/**
 	* Adds the given entity to the entities list
 	* @param e entity to be added to end of the entities list
 	*/
-	void addMovingEntity(Entities::MovingEntity e);
+	void insertPlayer(Entities::Player p);
+
+	/**
+	* Adds the given entity to the entities list
+	* @param e entity to be added to end of the entities list
+	*/
+	void insertMovingEntity(Entities::MovingEntity e);
 
 	/**
 	* Writes a serialized string containing all entities: players, then moving entities

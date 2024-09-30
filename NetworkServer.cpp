@@ -10,6 +10,7 @@
 #include <mutex>
 
 #include "networkthread.h"
+#include "entityHandler.h"
 #include "../CSC481-581-GameEngine/entity.h"
 #include "../CSC481-581-GameEngine/movingEntity.h"
 #include "../CSC481-581-GameEngine/player.h"
@@ -58,7 +59,7 @@ int main(int argc, char* argv[]) {
     //std::vector<std::thread> threadVector = std::vector<std::thread>();
 
     /// Controller for all entities and their physics
-    EntityController* entityController;
+    EntityHandler* entityHandler;
 
     // Instantiate entities
 	// Create ball object (Temp)
@@ -111,7 +112,7 @@ int main(int argc, char* argv[]) {
 		false
 	);
 
-    entityController->addMovingEntity(*movingBox);
+    entityHandler->insertMovingEntity(*movingBox);
 
     // Send out multipart messages forever
     while (true) {
@@ -150,7 +151,7 @@ int main(int argc, char* argv[]) {
             );
 
             // Add player to entity list
-            entityController->addEntity((Entities::Entity) *player);
+            entityHandler->insertPlayer(*player);
 
             // TODO Create new thread for newly connected client?
             // Mutex to handle locking, condition variable to handle notifications between threads
@@ -185,7 +186,7 @@ int main(int argc, char* argv[]) {
 
             // Iterate through all of the players/entities data and sync to all clients.
             std::list<Entities::Entity>::iterator iterEntity;
-            for (iterEntity = entityController->getEntities()->begin(); iterEntity != entityController->getEntities()->end(); ++iterEntity) {
+            for (iterEntity = entityHandler->getPlayers()->begin(); iterEntity != entityController->getEntities()->end(); ++iterEntity) {
                 std::stringstream ss;
                 ss << " Server\n" /*<< iterEntity.toString()*/;
                 zmq::message_t iterationStr(ss.str());

@@ -132,13 +132,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="deserializer.cpp" />
     <ClCompile Include="entityHandler.cpp" />
     <ClCompile Include="networkServer.cpp" />
     <ClCompile Include="networkThread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="deserializer.h" />
     <ClInclude Include="entityHandler.h" />
     <ClInclude Include="networkthread.h" />
   </ItemGroup>
