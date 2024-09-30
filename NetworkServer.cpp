@@ -179,8 +179,8 @@ int main(int argc, char* argv[]) {
             zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter));
             replyToClient.send(msg, zmq::send_flags::none);
             // Send initial starter information on all entities that are to be instantiated
-            zmq::message_t starterInfo("Client: " + entityHandler->toStringAll());
-            serverToClientPublisher.send(starterInfo, zmq::send_flags::none);
+            //zmq::message_t starterInfo("Client: " + entityHandler->toStringAll());
+            //serverToClientPublisher.send(starterInfo, zmq::send_flags::none);
         }
 
         zmq::message_t infoStr("Client\n" + entityHandler->toString());
