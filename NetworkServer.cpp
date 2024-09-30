@@ -18,6 +18,14 @@ typedef struct {
     std::thread m_thread;
 } ClientIteration;
 
+/**
+* The main method that runs the server-client connection for the GameEngine. Keeps 
+* track of important movements and corrects abnormalities between client and server.
+* This code was originally referencing the link below, but was changed drastically in 
+* order to fulfill the requirements of the Homework. It was used primarily as a tutorial
+* for the use of the PUB-SUB interaction between server and client: 
+* https://zeromq.org/socket-api/?language=cpp&library=cppzmq#publish-subscribe-pattern
+*/
 int main(int argc, char* argv[]) {
 
 	int clientIteration = 0;
