@@ -50,6 +50,7 @@ int EntityHandler::insertPlayer(Entities::Player p) {
 	if (p.getUUID() == -1) {
 		p.setUUID(m_idTracker++);
 	}
+	std::cout << "Update player with id of " << p.getUUID() << "\n";
 	m_players->insert_or_assign(p.getUUID(), p);
 	return p.getUUID();
 }

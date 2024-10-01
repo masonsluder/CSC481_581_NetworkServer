@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
             
             std::string clientString = std::to_string(clientIdentifierCounter);
 
-            std::cout << "Client Identifier Initialized: " << clientIdentifier << "\n";
+            //std::cout << "Client Identifier Initialized: " << clientIdentifier << "\n";
 
             // Send the identifier, as well as Player object back to the client
             zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + player.toString());
@@ -178,10 +178,11 @@ int main(int argc, char* argv[]) {
         zmq::message_t clientInfo;
         clientToServerSubscriber.recv(clientInfo, zmq::recv_flags::dontwait);
         if (!clientInfo.empty()) {
-            std::cout << "Received client identifier: " << clientInfo.to_string() << /*"," << clientInfo.to_string().length() <<*/ "\n";
+            //std::cout << "Received client identifier: " << clientInfo.to_string() << /*"," << clientInfo.to_string().length() <<*/ "\n";
 
             Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
             entityHandler->insertPlayer(updatedPlayer);
+            std::cout << "updatedPlayer: " << updatedPlayer.toString() << /*"," << clientInfo.to_string().length() <<*/ "\n";
         }
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
