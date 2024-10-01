@@ -60,17 +60,6 @@ int main(int argc, char* argv[]) {
     entityHandler = new EntityHandler();
 
     // Instantiate entities
-	// Create ball object (Temp)
-	Entities::Entity *ball = new Entities::Entity
-	(
-        1.0, 1.0,
-		550.0, 250.0,
-		20.0, 20.0,
-		10.0,
-		"./Assets/Textures/BallTexture.png",
-		true,
-		false
-	);
 	// Create box object that moves (Temp)
 	Entities::MovingEntity* movingBox = new Entities::MovingEntity
 	(
@@ -88,29 +77,8 @@ int main(int argc, char* argv[]) {
 		800.0,
 		800.0
 	);
-	// Create ground object (Temp)
-	Entities::Entity* ground = new Entities::Entity(
-        1.0, 1.0,
-		250.0, 550.0,
-		128.0, 64.0,
-		10.0,
-		"./Assets/Textures/devTexture1.png",
-		true,
-		false
-	);
 
-	// Create second ground object (Temp)
-	Entities::Entity* platform = new Entities::Entity(
-        1.0, 1.0,
-		350.0, 525.0,
-		64.0, 64.0,
-		10.0,
-		"./Assets/Textures/devTexture3.png",
-		true,
-		false
-	);
-
-    entityHandler->insertMovingEntity(*movingBox);
+    //entityHandler->insertMovingEntity(*movingBox);
 
     // Send out multipart messages forever
     while (true) {
@@ -182,10 +150,10 @@ int main(int argc, char* argv[]) {
 
             Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
             entityHandler->insertPlayer(updatedPlayer);
-            std::cout << "updatedPlayer: " << updatedPlayer.toString() << /*"," << clientInfo.to_string().length() <<*/ "\n";
+            //std::cout << "updatedPlayer: " << updatedPlayer.toString() << /*"," << clientInfo.to_string().length() <<*/ "\n";
         }
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        //std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     return 0;
 }

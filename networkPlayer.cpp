@@ -14,6 +14,7 @@ namespace Entities {
 		std::string textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY, float maxSpeed) {
         m_uuid = -1; // Default ID before being set by EntityHandler
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
+		//std::cout << "INSTANT PLAYER W POSITION COORDINATES: x" << positionX << " y" << positionY << "\n";
 		m_position = new Utils::Vector2D(positionX, positionY);
 		m_size = new Utils::Vector2D(width, height);
 		m_mass = mass;
