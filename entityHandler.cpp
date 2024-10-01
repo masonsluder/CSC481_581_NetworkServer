@@ -71,7 +71,7 @@ std::string EntityHandler::toString() {
 	// Iterate through player list and add them to the string
 	std::map<int, Entities::Player>::iterator playIter;
 	for (playIter = m_players->begin(); playIter != m_players->end(); ++playIter) {
-		ss << "*" << playIter->second.toString() << "\n";
+		ss << "*\n" << playIter->second.toString() << "\n";
 	}
 	// Separate entity types with '+'
 	ss << "+";
@@ -79,7 +79,7 @@ std::string EntityHandler::toString() {
 	std::map<int, Entities::MovingEntity>::iterator movIter;
 	// Iterate through each MovingEntity and add them to the string
 	for (movIter = m_movingEntities->begin(); movIter != m_movingEntities->end(); ++movIter) {
-		ss << "*" << movIter->second.toString() << "\n";
+		ss << "*\n" << movIter->second.toString() << "\n";
 	}
 	return ss.str();
 }
@@ -90,7 +90,7 @@ std::string EntityHandler::toStringAll() {
 	// Iterate through player list and add them to the string
 	std::map<int, Entities::Player>::iterator playIter;
 	for (playIter = m_players->begin(); playIter != m_players->end(); ++playIter) {
-		ss << "*" << playIter->second.toString() << "\n";
+		ss << "*\n" << playIter->second.toString() << "\n";
 	}
 	// Separate entity types with '+'
 	ss << "+";
@@ -98,7 +98,7 @@ std::string EntityHandler::toStringAll() {
 	std::map<int, Entities::MovingEntity>::iterator movIter;
 	// Iterate through each MovingEntity and add them to the string
 	for (movIter = m_movingEntities->begin(); movIter != m_movingEntities->end(); ++movIter) {
-		ss << "*" << movIter->second.toString() << "\n";
+		ss << "*\n" << movIter->second.toString() << "\n";
 	}
 
 	// Separate entity types with '+'
@@ -107,7 +107,7 @@ std::string EntityHandler::toStringAll() {
 	std::map<int, Entities::Entity>::iterator statIter;
 	// Iterate through each static Entity and add them to the string
 	for (statIter = m_staticEntities->begin(); statIter != m_staticEntities->end(); ++statIter) {
-		ss << "*" << statIter->second.toString() << "\n";
+		ss << "*\n" << statIter->second.toString() << "\n";
 	}
 	return ss.str();
 }
