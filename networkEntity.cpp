@@ -15,6 +15,7 @@ namespace Entities {
 	* Default constructor that sets all values to their defaults
 	*/
 	Entity::Entity() {
+		m_uuid = -1; // Default ID before being set by EntityHandler
 		m_scale = new Utils::Vector2D(1.0, 1.0);
 		m_position = new Utils::Vector2D(0.0, 0.0);
 		m_size = new Utils::Vector2D(0.0, 0.0);
@@ -25,7 +26,7 @@ namespace Entities {
 		m_acceleration_max = 10;
 		m_mass = 5;
 
-		m_textureFilepath = ".\Assets\Textures\MissingTexture.png";
+		m_textureFilepath = "./Assets/Textures/MissingTexture.png";
 
 		m_isStationary = false;
 		m_affectedByPhysics = false;
@@ -50,6 +51,7 @@ namespace Entities {
 	 */
 	Entity::Entity(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 		const char* textureFilepath, bool isStationary, bool affectedByPhysics) {
+		m_uuid = -1; // Default ID before being set by EntityHandler
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
 		m_size = new Utils::Vector2D(width, height);
@@ -60,7 +62,7 @@ namespace Entities {
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
 		m_acceleration_max = 10;
 
-		m_textureFilepath = textureFilepath;
+		m_textureFilepath = std::string(textureFilepath);
 		//m_texture = Render::loadTexture(textureFilepath);
 
 		m_isStationary = isStationary;
@@ -216,7 +218,7 @@ namespace Entities {
 	* Returns the texture of the entity
 	* @returns The texture of the entity as a 2D vector
 	*/
-	const char* Entity::getTexture(void) {
+	std::string Entity::getTexture(void) {
 		return m_textureFilepath;
 	}
 
@@ -224,7 +226,7 @@ namespace Entities {
 	* Sets the texture by trying to load the file at the given filepath
 	* @param textureFilepath The location of the texture to load
 	*/
-	void Entity::setTexture(char* textureFilepath) {
+	void Entity::setTexture(std::string textureFilepath) {
 		m_textureFilepath = textureFilepath;
 	}
 

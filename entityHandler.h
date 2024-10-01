@@ -26,6 +26,8 @@ private:
 	std::map<int, Entities::Entity>* m_staticEntities;
 	/** Timeline used for movement calculations */
 	Timeline m_timeline;
+	/** Integer used to track and set IDs to added entitiess */
+	int m_idTracker;
 
 public:
 	/**
@@ -54,7 +56,7 @@ public:
 	* Adds the given entity to the entities list
 	* @param e entity to be added to end of the entities list
 	*/
-	void insertPlayer(Entities::Player p);
+	int insertPlayer(Entities::Player p);
 
 	/**
 	* Adds the given entity to the entities list

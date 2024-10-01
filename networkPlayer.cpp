@@ -1,4 +1,5 @@
 #include <sstream>
+#include <iostream>
 
 #include "networkPlayer.h"
 #include "networkVector2D.h"
@@ -10,7 +11,8 @@ namespace Entities {
 	 * Constructs the Player and initializes all fields
 	 */
 	Player::Player(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
-		const char* textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY, float maxSpeed) {
+		std::string textureFilepath, bool isStationary, bool affectedByPhysics, float jumpVectorX, float jumpVectorY, float maxSpeed) {
+        m_uuid = -1; // Default ID before being set by EntityHandler
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
 		m_size = new Utils::Vector2D(width, height);
@@ -20,7 +22,9 @@ namespace Entities {
 		m_acceleration = new Utils::Vector2D(0.0, 0.0);
 		m_jumpVector = new Utils::Vector2D(jumpVectorX, jumpVectorY);
 
-		//m_texture = Render::loadTexture(textureFilepath);
+		std::cout << "Player constructor parameter: " << textureFilepath << "\n";
+		m_textureFilepath = textureFilepath;
+		std::cout << "Player string value: " << m_textureFilepath << "\n";
 
 		m_isStationary = isStationary;
 		m_affectedByPhysics = affectedByPhysics;
@@ -103,7 +107,13 @@ namespace Entities {
 		ss << m_velocity_max << "\n";
 		ss << m_acceleration_max << "\n";
 		// Get filepath to SDLTexture
+
+		std::cout << "Before Filepath inside Player toString: " << m_textureFilepath << "\n";
+
 		ss << m_textureFilepath << "\n";
+
+		std::cout << "After Filepath inside Player toString: " << m_textureFilepath << "\n";
+
 		// Stringifies each SDL_Rect Collider
 		for (SDL_Rect collider : *m_colliders) {
 			ss << collider.x << "," << collider.y << "," << collider.w << "," << collider.h << "\t";
@@ -141,6 +151,8 @@ namespace Entities {
 		std::getline(ss, line);
 		std::string textureFilePath = line;
 
+		std::cout << "Filepath inside Player fromString: " << textureFilePath << "\n";
+
 		std::list<SDL_Rect>* colliders = new std::list<SDL_Rect>();
 		std::getline(ss, line);
 		std::stringstream colliderStream(line);
@@ -159,11 +171,11 @@ namespace Entities {
 		Utils::Vector2D* jumpVector = Utils::Vector2D::fromString(ss);
 
 		Player* entity = new Player(scale->x, scale->y, position->x, position->y, size->x, size->y, mass,
-			textureFilePath.c_str(), isStationary, affectedByPhysics, jumpVector->x, jumpVector->y, maxSpeed);
+			textureFilePath, isStationary, affectedByPhysics, jumpVector->x, jumpVector->y, maxSpeed);
 
 		// Set other fields if needed
 		entity->setIsGrounded(isGrounded);
-
+		entity->setTexture(textureFilePath);
 
 		return entity;
 	}

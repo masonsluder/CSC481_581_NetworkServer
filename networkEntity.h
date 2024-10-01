@@ -35,7 +35,7 @@ namespace Entities {
 		float m_acceleration_max;
 
 		/** The filepath to the texture to be used */
-		const char* m_textureFilepath;
+		std::string m_textureFilepath;
 
 		/** Rectangle collider to use for this entity */
 		std::list<SDL_Rect>* m_colliders;
@@ -170,12 +170,12 @@ namespace Entities {
 		/**
 		 * Returns the pointer to the SDL_Texture
 		 */
-		const char* getTexture(void);
+		std::string getTexture(void);
 
 		/**
 		 * Loads the texture at the given filepath
 		 */
-		void setTexture(char* textureFilepath);
+		void setTexture(std::string textureFilepath);
 
 		/**
 		 * Returns the list of colliders

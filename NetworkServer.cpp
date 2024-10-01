@@ -55,8 +55,6 @@ int main(int argc, char* argv[]) {
     clientToServerSubscriber.bind("tcp://*:5557");
     clientToServerSubscriber.set(zmq::sockopt::subscribe, "Server");
 
-    //std::vector<std::thread> threadVector = std::vector<std::thread>();
-
     /// Controller for all entities and their physics
     EntityHandler* entityHandler;
     entityHandler = new EntityHandler();
@@ -137,8 +135,7 @@ int main(int argc, char* argv[]) {
             clientIdentifier[8] = '\0';
 
             // Create a player Entity (Temp: Make more malleable in the future)
-            // TODO: Base starting position off window size percentage
-            Entities::Player* player = new Entities::Player(
+            Entities::Player player = Entities::Player(
                 1.0, 1.0,
                 250.0, 250.0,
                 15.0, 25.0,
@@ -151,19 +148,9 @@ int main(int argc, char* argv[]) {
             );
 
             // Add player to entity list
-            entityHandler->insertPlayer(*player);
-
-            // TODO Create new thread for newly connected client?
-            // Mutex to handle locking, condition variable to handle notifications between threads
-            //std::mutex m;
-            //std::condition_variable cv;
-
-            // Create thread objects
-            //NetworkThread clientThread(0, NULL, &m, &cv);
-
-            // Start thread
-            //std::thread first(&NetworkThread::run, &clientThread);
-
+            int playerUUID = entityHandler->insertPlayer(player);
+            player.setUUID(playerUUID);
+   
             // Add new client to list of clients
             ClientIteration newClient = { clientIdentifierCounter, 0, {} };
             strncpy_s(newClient.m_identifier, clientIdentifier, sizeof(newClient.m_identifier));
@@ -173,76 +160,31 @@ int main(int argc, char* argv[]) {
 
             std::cout << "Client Identifier Initialized: " << clientIdentifier << "\n";
 
-            //assert("Client_" + std::to_string(clientIdentifierCounter) == "Client_1");
-
-            // Send the identifier back to the client
-            zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter));
+            // Send the identifier, as well as Player object back to the client
+            zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + player.toString());
             replyToClient.send(msg, zmq::send_flags::none);
-            // Send initial starter information on all entities that are to be instantiated
-            //zmq::message_t starterInfo("Client: " + entityHandler->toStringAll());
-            //serverToClientPublisher.send(starterInfo, zmq::send_flags::none);
+
         }
 
+        // Send all entity information to every client.
         zmq::message_t infoStr("Client\n" + entityHandler->toString());
-
         serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
 
-        // Iterate throught the list of clients and broadcast each of their iteration numbers to each of the clients
-        //std::cout << "Iterating through ClientIterations\n";
         for (ClientIteration& client : clientList) {
-
-            // Iterate through all of the players/entities data and sync to all clients.
-            //std::list<Entities::Player>::iterator iterEntity;
-            //for (iterEntity = entityHandler->getPlayers()->begin(); iterEntity != entityController->getEntities()->end(); ++iterEntity) {
-            //    std::stringstream ss;
-            //    ss << " Server\n" /*<< iterEntity.toString()*/;
-            //    zmq::message_t iterationStr(ss.str());
-            //    // Send to one client
-            //    serverToClientPublisher.send(zmq::str_buffer(client.m_identifier), zmq::send_flags::sndmore);
-
-            //    // Send to all clients
-            //    //serverToClientPublisher.send(zmq::str_buffer("Client"), zmq::send_flags::sndmore);
-            //    serverToClientPublisher.send(iterationStr, zmq::send_flags::dontwait);
-            //}
             client.m_iteration += 1;
-
-
-            // Handle publishing to clients (in their branch using each of their identifiers)
-            //std::cout << "Looping: " << client.m_id << "\n";
-            // Creates stringstream for string building
-            // Prints out Client X: Iteration Y, then increments Y
-            //ss << " Iteration " << client.m_iteration;
-
-            ////std::cout << client.m_identifier << ": " << "Iteration " << client.m_iteration << "\n";
-            //// Broadcast message to clients
-            //zmq::message_t iterationStr(ss.str());
-            //
-            //// Send to one client (FOR SECTION 5)
-            //serverToClientPublisher.send(zmq::str_buffer(client.m_identifier), zmq::send_flags::sndmore);
-
-            //// Send to all clients
-            ////serverToClientPublisher.send(zmq::str_buffer("Client"), zmq::send_flags::sndmore);
-            //serverToClientPublisher.send(iterationStr, zmq::send_flags::dontwait);
         }
 
         // Receive client info
         zmq::message_t clientInfo;
         clientToServerSubscriber.recv(clientInfo, zmq::recv_flags::dontwait);
         if (!clientInfo.empty()) {
-            std::cout << "Received client identifier: " << clientInfo.to_string() << "," << clientInfo.to_string().length() << "\n";
-        }
+            std::cout << "Received client identifier: " << clientInfo.to_string() << /*"," << clientInfo.to_string().length() <<*/ "\n";
 
-        /*if (client_joins()) {
-            publisher.send(clientIdentifierCounter);
-            clientIdentifierCounter++;
-        }*/
+            Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
+            entityHandler->insertPlayer(updatedPlayer);
+        }
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-
-    // for (std::thread& thread : threadVector) {
-    //     thread.join();
-    // }
-
     return 0;
 }

@@ -11,6 +11,7 @@ EntityHandler::EntityHandler() {
 	m_movingEntities = new std::map<int, Entities::MovingEntity>();
 	m_staticEntities = new std::map<int, Entities::Entity>();
 	m_timeline = Timeline();
+	m_idTracker = 0;
 }
 
 void EntityHandler::updateEntities() {
@@ -33,7 +34,7 @@ void EntityHandler::updateEntities() {
 void EntityHandler::updatePlayerByString(std::string playerString) {
 	// Creates a player from the string
 	Entities::Player *player = Entities::Player::fromString(playerString);
-	m_players->insert(std::map<int, Entities::Player>::value_type(player->getUUID(), *player));
+	m_players->insert_or_assign(player->getUUID(), *player);
 }
 
 
@@ -45,8 +46,12 @@ std::map<int, Entities::Player>* EntityHandler::getPlayers() {
  * Adds the given entity to the entities list
  * @param e entity to be added to end of the entities list
  */
-void EntityHandler::insertPlayer(Entities::Player p) {
-	m_players->insert(std::map<int, Entities::Player>::value_type(p.getUUID(), p));
+int EntityHandler::insertPlayer(Entities::Player p) {
+	if (p.getUUID() == -1) {
+		p.setUUID(m_idTracker++);
+	}
+	m_players->insert_or_assign(p.getUUID(), p);
+	return p.getUUID();
 }
 
 /**
@@ -54,7 +59,10 @@ void EntityHandler::insertPlayer(Entities::Player p) {
  * @param e entity to be added to end of the entities list
  */
 void EntityHandler::insertMovingEntity(Entities::MovingEntity e) {
-	m_movingEntities->insert(std::map<int, Entities::MovingEntity>::value_type(e.getUUID(), e));
+	if (e.getUUID() == -1) {
+		e.setUUID(m_idTracker++);
+	}
+	m_movingEntities->insert_or_assign(e.getUUID(), e);
 }
 
 std::string EntityHandler::toString() {

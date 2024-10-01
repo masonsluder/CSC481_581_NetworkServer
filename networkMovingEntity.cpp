@@ -14,6 +14,8 @@ namespace Entities {
 
 	MovingEntity::MovingEntity() {
 		// Entity parts
+		m_uuid = -1; // Default ID before being set by EntityHandler
+
 		m_scale = new Utils::Vector2D(1, 1);
 		m_position = new Utils::Vector2D(300, 300);
 		m_size = new Utils::Vector2D(1, 1);
@@ -58,6 +60,7 @@ namespace Entities {
 	MovingEntity::MovingEntity(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 		const char* textureFilepath, bool isStationary, bool affectedByPhysics,
 		bool continuous, bool reverse, int pauseTimer, float speed, float endPosX, float endPosY) {
+		m_uuid = -1; // Default ID before being set by EntityHandler
 		// Entity parts
 		m_scale = new Utils::Vector2D(scaleX, scaleY);
 		m_position = new Utils::Vector2D(positionX, positionY);
@@ -67,6 +70,7 @@ namespace Entities {
 		m_mass = mass;
 		m_isStationary = isStationary;
 		m_affectedByPhysics = affectedByPhysics;
+		m_textureFilepath = std::string(textureFilepath);
 		// MovingEntity parts
 		m_continuous = continuous;
 		m_reverse = reverse;
@@ -158,6 +162,7 @@ namespace Entities {
 		ss << m_acceleration_max << "\n";
 		// Get filepath to SDLTexture
 		ss << m_textureFilepath << "\n";
+
 		// Stringifies each SDL_Rect Collider
 		for (SDL_Rect collider : *m_colliders) {
 			ss << collider.x << "," << collider.y << "," << collider.w << "," << collider.h << "\t";
@@ -196,7 +201,7 @@ namespace Entities {
 		float acceleration_max = getFloat();
 
 		std::getline(ss, line);
-		std::string textureFilePath = line;
+		const char* textureFilePath = line.c_str();
 
 		std::list<SDL_Rect>* colliders = new std::list<SDL_Rect>();
 		std::getline(ss, line);
@@ -221,7 +226,7 @@ namespace Entities {
 		Utils::Vector2D* endPosition = Utils::Vector2D::fromString(ss);
 
 		MovingEntity* entity = new MovingEntity(scale->x, scale->y, position->x, position->y, size->x, size->y, mass,
-			textureFilePath.c_str(), isStationary, affectedByPhysics,
+			textureFilePath, isStationary, affectedByPhysics,
 			continuous, reverse, pauseTimer, speed, endPosition->x, endPosition->y);
 
 		// Set other fields if needed
