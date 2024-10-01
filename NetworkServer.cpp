@@ -131,11 +131,15 @@ int main(int argc, char* argv[]) {
             // Send the identifier, as well as Player object back to the client
             zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + player.toString());
             replyToClient.send(msg, zmq::send_flags::none);
-
         }
 
+        //std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::stringstream ss;
+        ss.str("");
+        ss << std::clock() <<"\n";
+        std::cout << "Info to send to clients: " << ss.str() + entityHandler->toString() << /*"," << clientInfo.to_string().length() <<*/ "\n";
         // Send all entity information to every client.
-        zmq::message_t infoStr("Client\n" + entityHandler->toString());
+        zmq::message_t infoStr(ss.str() + entityHandler->toString());
         serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
 
         for (ClientIteration& client : clientList) {
