@@ -152,20 +152,14 @@ int main(int argc, char* argv[]) {
         zmq::message_t clientInfo;
         clientToServerSubscriber.recv(clientInfo, zmq::recv_flags::dontwait);
         if (!clientInfo.empty()) {
-            //std::cout << "Received client identifier: " << clientInfo.to_string() << /*"," << clientInfo.to_string().length() <<*/ "\n";
-
+            // Create player from string and update their information
             Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
-
-            //std::cout << "Updated player information: " << updatedPlayer.toString() << "\n";
-
+            // Insert and update/create a new player into the Entity maps
             entityHandler->insertPlayer(updatedPlayer);
-            //std::cout << "updatedPlayer: " << updatedPlayer.toString() << /*"," << clientInfo.to_string().length() <<*/ "\n";
         }
 
-        // Make so that server only sends every 1/20th second or so
+        // Make so that server only sends every 1/40th of a second or so
         std::this_thread::sleep_for(std::chrono::milliseconds(25));
-        // Slower prints for easier debugs
-        //std::this_thread::sleep_for(std::chrono::seconds(1));
 
     }
     return 0;
