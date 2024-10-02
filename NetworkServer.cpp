@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Running server.\n";
     // initialize the zmq context with a single IO thread
-    zmq::context_t context{ 3 };
+    zmq::context_t context{ 2 };
 
     // construct a PUB (publisher) socket and broadcast information about entity movements to all clients
     zmq::socket_t serverToClientPublisher{ context, zmq::socket_type::pub };
