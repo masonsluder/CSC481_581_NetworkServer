@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
     zmq::socket_t clientToServerSubscriber{ context, zmq::socket_type::sub };
     clientToServerSubscriber.bind("tcp://*:5557");
     clientToServerSubscriber.set(zmq::sockopt::subscribe, "Server");
-    
+   
     /// Controller for all entities and their physics
     EntityHandler* entityHandler;
     entityHandler = new EntityHandler();
@@ -78,10 +78,12 @@ int main(int argc, char* argv[]) {
 		800.0
 	);
 
-    //entityHandler->insertMovingEntity(*movingBox);
+    entityHandler->insertMovingEntity(*movingBox);
 
     // Send out multipart messages forever
     while (true) {
+        // Update entity movements
+        entityHandler->updateEntities();
 
         // REQ model ready to receive requests from the client.
         zmq::message_t clientIdRequest;
@@ -150,11 +152,11 @@ int main(int argc, char* argv[]) {
         zmq::message_t clientInfo;
         clientToServerSubscriber.recv(clientInfo, zmq::recv_flags::dontwait);
         if (!clientInfo.empty()) {
-            std::cout << "Received client identifier: " << clientInfo.to_string() << /*"," << clientInfo.to_string().length() <<*/ "\n";
+            //std::cout << "Received client identifier: " << clientInfo.to_string() << /*"," << clientInfo.to_string().length() <<*/ "\n";
 
             Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
 
-            std::cout << "Updated player information: " << updatedPlayer.toString() << "\n";
+            //std::cout << "Updated player information: " << updatedPlayer.toString() << "\n";
 
             entityHandler->insertPlayer(updatedPlayer);
             //std::cout << "updatedPlayer: " << updatedPlayer.toString() << /*"," << clientInfo.to_string().length() <<*/ "\n";
@@ -164,6 +166,7 @@ int main(int argc, char* argv[]) {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
         // Slower prints for easier debugs
         //std::this_thread::sleep_for(std::chrono::seconds(1));
+
     }
     return 0;
 }

@@ -60,7 +60,8 @@ void Timeline::updateTime() {
 	// Apply timescaling
 	m_deltaTime *= m_timeScale;
 
-	/*std::cout << "DeltaTime: " << m_deltaTime << std::endl;*/
+	//std::cout << "Current Time: " << m_currentTime << "\nPrev Time: " << m_prevTime << "\n";
+	//std::cout << "DeltaTime: " << m_deltaTime << "std::endl" << "\n";
 }
 
 double Timeline::getDeltaTime() {

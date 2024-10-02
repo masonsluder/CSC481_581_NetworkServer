@@ -11,18 +11,24 @@ EntityHandler::EntityHandler() {
 	m_movingEntities = new std::map<int, Entities::MovingEntity>();
 	m_staticEntities = new std::map<int, Entities::Entity>();
 	m_timeline = Timeline();
+	//m_timeline.changeTimeScale(0.5f);
 	m_idTracker = 0;
 }
 
 void EntityHandler::updateEntities() {
+	// Updates time
+	m_timeline.updateTime();
 	// Create map iterator
 	std::map<int, Entities::MovingEntity>::iterator movIter;
 	// Get deltaTime
 	double dt = m_timeline.getDeltaTime();
 
+	//std::cout << "DeltaTime in the Network: " << dt << "\n";
+
 	// Moves all moving entities to their appropriate locations
 	for (movIter = m_movingEntities->begin(); movIter != m_movingEntities->end(); ++movIter) {
 		movIter->second.moveByTime(dt);
+		std::cout << movIter->second.toString();
 	}
 }
 
@@ -84,6 +90,9 @@ std::string EntityHandler::toString() {
 	for (movIter = m_movingEntities->begin(); movIter != m_movingEntities->end(); ++movIter) {
 		ss << "*\n" << movIter->second.toString() << "\n";
 	}
+
+	//std::cout << ss.str() << "\n";
+
 	return ss.str();
 }
 
