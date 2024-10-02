@@ -28,7 +28,7 @@ void EntityHandler::updateEntities() {
 	// Moves all moving entities to their appropriate locations
 	for (movIter = m_movingEntities->begin(); movIter != m_movingEntities->end(); ++movIter) {
 		movIter->second.moveByTime(dt);
-		std::cout << movIter->second.toString();
+		//std::cout << movIter->second.toString();
 	}
 }
 

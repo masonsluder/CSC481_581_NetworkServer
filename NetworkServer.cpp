@@ -22,6 +22,7 @@ typedef struct {
     char m_identifier[9];
 } ClientIteration;
 
+
 /**
 * The main method that runs the server-client connection for the GameEngine. Keeps 
 * track of important movements and corrects abnormalities between client and server.
@@ -44,8 +45,17 @@ int main(int argc, char* argv[]) {
 
     // construct a PUB (publisher) socket and broadcast information about entity movements to all clients
     zmq::socket_t serverToClientPublisher{ context, zmq::socket_type::pub };
-    serverToClientPublisher.bind("tcp://*:5555");
 
+    int conflate = 1;
+    zmq_setsockopt(serverToClientPublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+    int linger = 0;
+    zmq_setsockopt(serverToClientPublisher, ZMQ_LINGER, &linger, sizeof(linger));
+    int backlog = 0;
+    zmq_setsockopt(serverToClientPublisher, ZMQ_BACKLOG, &backlog, sizeof(backlog));
+    /*int rcvhwm = 1;
+    zmq_setsockopt(serverToClientPublisher, ZMQ_RCVHWM, &rcvhwm, sizeof(rcvhwm));*/
+    serverToClientPublisher.bind("tcp://*:5555");
+    //serverToClientPublisher.set(zmq::sockopt::subscribe, "");
     // construct a REP (reply) socket to send client identifier information back to client
     zmq::socket_t replyToClient{ context, zmq::socket_type::rep };
     replyToClient.bind("tcp://*:5556");
@@ -91,13 +101,13 @@ int main(int argc, char* argv[]) {
 
         if (!clientIdRequest.empty()) {
             // Print request information from client
-            std::cout << "Publisher: [" << clientIdRequest.to_string() << "]\n";
+            //std::cout << "Publisher: [" << clientIdRequest.to_string() << "]\n";
         }
 
         // If the client sends a request, start handling sending the reply
         if (!clientIdRequest.empty()) {
             clientIdentifierCounter++;
-            std::cout << "Client [" << clientIdentifierCounter << "] connected.\n";
+            //std::cout << "Client [" << clientIdentifierCounter << "] connected.\n";
 
             // Cast clientIdentifierCounter to a char array to send to client
             char clientIdentifier[9] = "Client_";
@@ -138,15 +148,14 @@ int main(int argc, char* argv[]) {
         //std::this_thread::sleep_for(std::chrono::milliseconds(500));
         std::stringstream ss;
         ss.str("");
-        ss << std::clock() <<"\n";
+        ss << std::clock() << "\n";
         // std::cout << "Info to send to clients: " << ss.str() + entityHandler->toString() << "\n";
         // Send all entity information to every client.
         zmq::message_t infoStr(ss.str() + entityHandler->toString());
+        zmq_connect(serverToClientPublisher, "tcp://:5555");
         serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
-
-        for (ClientIteration& client : clientList) {
-            client.m_iteration += 1;
-        }
+		
+        zmq_disconnect(serverToClientPublisher, "tcp://:5555");
 
         // Receive client info
         zmq::message_t clientInfo;
@@ -158,9 +167,8 @@ int main(int argc, char* argv[]) {
             entityHandler->insertPlayer(updatedPlayer);
         }
 
-        // Make so that server only sends every 1/40th of a second or so
-        std::this_thread::sleep_for(std::chrono::milliseconds(25));
-
+		// Make so that server only sends every 1/40th of a second or so
+		std::this_thread::sleep_for(std::chrono::milliseconds(15));
     }
     return 0;
 }

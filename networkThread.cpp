@@ -6,7 +6,7 @@
 
 #include "networkthread.h"
 
-NetworkThread::NetworkThread(int i, NetworkThread* other, std::mutex* _mutex, std::condition_variable* _condition_variable)
+Thread::Thread(int i, Thread* other, std::mutex* _mutex, std::condition_variable* _condition_variable)
 {
     // Sets the thread ID, 
     this->i = i;
@@ -16,13 +16,13 @@ NetworkThread::NetworkThread(int i, NetworkThread* other, std::mutex* _mutex, st
     this->_condition_variable = _condition_variable;
 }
 
-bool NetworkThread::isBusy()
+bool Thread::isBusy()
 {
     std::lock_guard<std::mutex> lock(*_mutex);  // this locks the mutex until the variable goes out of scope (i.e., when the function returns in this case)
     return busy;
 }
 
-void NetworkThread::run()
+void Thread::run()
 {
     // Client threads
     std::cout << "New thread created for client.\n";
@@ -32,7 +32,7 @@ void NetworkThread::run()
 /**
  * Wrapper function because threads can't take pointers to member functions.
  */
-void run_wrapper(NetworkThread* fe)
+void run_wrapper(Thread* fe)
 {
     fe->run();
 }
