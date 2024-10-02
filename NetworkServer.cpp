@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Running server.\n";
     // initialize the zmq context with a single IO thread
-    zmq::context_t context{ 2 };
+    zmq::context_t context{ 3 };
 
     // construct a PUB (publisher) socket and broadcast information about entity movements to all clients
     zmq::socket_t serverToClientPublisher{ context, zmq::socket_type::pub };
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
     zmq::socket_t clientToServerSubscriber{ context, zmq::socket_type::sub };
     clientToServerSubscriber.bind("tcp://*:5557");
     clientToServerSubscriber.set(zmq::sockopt::subscribe, "Server");
-
+    
     /// Controller for all entities and their physics
     EntityHandler* entityHandler;
     entityHandler = new EntityHandler();
@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
         std::stringstream ss;
         ss.str("");
         ss << std::clock() <<"\n";
-        std::cout << "Info to send to clients: " << ss.str() + entityHandler->toString() << /*"," << clientInfo.to_string().length() <<*/ "\n";
+        // std::cout << "Info to send to clients: " << ss.str() + entityHandler->toString() << "\n";
         // Send all entity information to every client.
         zmq::message_t infoStr(ss.str() + entityHandler->toString());
         serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
@@ -150,13 +150,19 @@ int main(int argc, char* argv[]) {
         zmq::message_t clientInfo;
         clientToServerSubscriber.recv(clientInfo, zmq::recv_flags::dontwait);
         if (!clientInfo.empty()) {
-            //std::cout << "Received client identifier: " << clientInfo.to_string() << /*"," << clientInfo.to_string().length() <<*/ "\n";
+            std::cout << "Received client identifier: " << clientInfo.to_string() << /*"," << clientInfo.to_string().length() <<*/ "\n";
 
             Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
+
+            std::cout << "Updated player information: " << updatedPlayer.toString() << "\n";
+
             entityHandler->insertPlayer(updatedPlayer);
             //std::cout << "updatedPlayer: " << updatedPlayer.toString() << /*"," << clientInfo.to_string().length() <<*/ "\n";
         }
 
+        // Make so that server only sends every 1/20th second or so
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        // Slower prints for easier debugs
         //std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     return 0;

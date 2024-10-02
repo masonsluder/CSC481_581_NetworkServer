@@ -75,7 +75,9 @@ std::string EntityHandler::toString() {
 		ss << "*\n" << playIter->second.toString() << "\n";
 	}
 	// Separate entity types with '+'
-	ss << "+";
+	if (m_players->size() > 0 || m_movingEntities->size() > 0) {
+		ss << "+";
+	}
 
 	std::map<int, Entities::MovingEntity>::iterator movIter;
 	// Iterate through each MovingEntity and add them to the string
