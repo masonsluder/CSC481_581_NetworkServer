@@ -163,7 +163,7 @@ int main(int argc, char* argv[]) {
         }
 
         // Make so that server only sends every 1/20th second or so
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        std::this_thread::sleep_for(std::chrono::milliseconds(25));
         // Slower prints for easier debugs
         //std::this_thread::sleep_for(std::chrono::seconds(1));
 
