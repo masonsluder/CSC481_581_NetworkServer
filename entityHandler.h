@@ -69,6 +69,11 @@ public:
 	*/
 	std::string toString();
 
+	/**
+	* Writes a serialized string containing entities: moving entities
+	*/
+	std::string toString(int networkConfiguration);
+
     /**
     * Writes a serialized string containing all entities: players, then moving entities, then static entities
     */

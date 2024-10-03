@@ -96,6 +96,32 @@ std::string EntityHandler::toString() {
 	return ss.str();
 }
 
+std::string EntityHandler::toString(int networkConfiguration) {
+	// Create stringstream
+	std::stringstream ss;
+	// Iterate through player list and add them to the string
+	if (networkConfiguration == 1) {
+		std::map<int, Entities::Player>::iterator playIter;
+		for (playIter = m_players->begin(); playIter != m_players->end(); ++playIter) {
+			ss << "*\n" << playIter->second.toString() << "\n";
+		}
+	}
+	// Separate entity types with '+'
+	if (m_players->size() > 0 || m_movingEntities->size() > 0) {
+		ss << "+";
+	}
+
+	std::map<int, Entities::MovingEntity>::iterator movIter;
+	// Iterate through each MovingEntity and add them to the string
+	for (movIter = m_movingEntities->begin(); movIter != m_movingEntities->end(); ++movIter) {
+		ss << "*\n" << movIter->second.toString() << "\n";
+	}
+
+	//std::cout << ss.str() << "\n";
+
+	return ss.str();
+}
+
 std::string EntityHandler::toStringAll() {
 	// Create stringstream
 	std::stringstream ss;

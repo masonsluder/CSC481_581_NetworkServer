@@ -36,6 +36,8 @@ int main(int argc, char* argv[]) {
 	int clientIteration = 0;
 	int clientIdentifierCounter = 0;
 
+    int networkConfigurationSetting = 1;
+
     // Initialize list of Client Iteration trackers
     std::vector<ClientIteration> clientList = std::vector<ClientIteration>();
 
@@ -83,7 +85,7 @@ int main(int argc, char* argv[]) {
 		true,
 		false,
 		10,
-		500,
+		50,
 		800.0,
 		800.0
 	);
@@ -98,10 +100,12 @@ int main(int argc, char* argv[]) {
         // REQ model ready to receive requests from the client.
         zmq::message_t clientIdRequest;
         replyToClient.recv(clientIdRequest, zmq::recv_flags::dontwait);
-
+        // 1 = Client to server, 2 = Peer to Peer
+       
         if (!clientIdRequest.empty()) {
+            networkConfigurationSetting = (int)clientIdRequest.str()[0] - 48;
             // Print request information from client
-            //std::cout << "Publisher: [" << clientIdRequest.to_string() << "]\n";
+            std::cout << "Publisher: [" << clientIdRequest.to_string() << "]\n";
         }
 
         // If the client sends a request, start handling sending the reply
@@ -123,8 +127,8 @@ int main(int argc, char* argv[]) {
                 "./Assets/Textures/DefaultPlayerTexture1.png",
                 false,
                 true,
-                0.0f, -150.0f,
-                6.0
+                0.0f, -250.0f,
+                50.0f
             );
 
             // Add player to entity list
@@ -143,18 +147,25 @@ int main(int argc, char* argv[]) {
             // Send the identifier, as well as Player object back to the client
             zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + player.toString());
             replyToClient.send(msg, zmq::send_flags::none);
-        }
 
+            if (networkConfigurationSetting == 2) {
+                std::stringstream ss;
+                ss.str("");
+                ss << std::clock() << "\n";
+                zmq::message_t infoStr(ss.str() + entityHandler->toString());
+                zmq_connect(serverToClientPublisher, "tcp://:5555");
+                serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
+                zmq_disconnect(serverToClientPublisher, "tcp://:5555");
+            }
+        }
+        // Send all entity information to every client.
         //std::this_thread::sleep_for(std::chrono::milliseconds(500));
         std::stringstream ss;
         ss.str("");
         ss << std::clock() << "\n";
-        // std::cout << "Info to send to clients: " << ss.str() + entityHandler->toString() << "\n";
-        // Send all entity information to every client.
         zmq::message_t infoStr(ss.str() + entityHandler->toString());
         zmq_connect(serverToClientPublisher, "tcp://:5555");
         serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
-		
         zmq_disconnect(serverToClientPublisher, "tcp://:5555");
 
         // Receive client info
