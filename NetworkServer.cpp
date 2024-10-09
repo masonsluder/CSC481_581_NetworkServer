@@ -127,8 +127,8 @@ int main(int argc, char* argv[]) {
                 "./Assets/Textures/DefaultPlayerTexture1.png",
                 false,
                 true,
-                0.0f, -250.0f,
-                50.0f
+                0.0f, -7000.0f,
+                100.0f
             );
 
             // Add player to entity list
