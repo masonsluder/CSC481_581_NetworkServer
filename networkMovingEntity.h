@@ -18,6 +18,10 @@ namespace Entities {
 		bool m_continuous;
 		/** Whether or not the object is moving from end to start */
 		bool m_reverse;
+		/** Whether the moving entity has reached the x destination */
+		bool _reachedXDest;
+		/** Whether the moving entity has reached the y destination */
+		bool _reachedYDest;
 		/** The amount of time that the object will pause for at the end of its path */
 		int m_pauseTimer;
 		/** The timer that counts down before the entity starts moving again */

@@ -50,10 +50,10 @@ int main(int argc, char* argv[]) {
 
     int conflate = 1;
     zmq_setsockopt(serverToClientPublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
-    int linger = 0;
-    zmq_setsockopt(serverToClientPublisher, ZMQ_LINGER, &linger, sizeof(linger));
-    int backlog = 0;
-    zmq_setsockopt(serverToClientPublisher, ZMQ_BACKLOG, &backlog, sizeof(backlog));
+    //int linger = 0;
+    //zmq_setsockopt(serverToClientPublisher, ZMQ_LINGER, &linger, sizeof(linger));
+    //int backlog = 0;
+    //zmq_setsockopt(serverToClientPublisher, ZMQ_BACKLOG, &backlog, sizeof(backlog));
     /*int rcvhwm = 1;
     zmq_setsockopt(serverToClientPublisher, ZMQ_RCVHWM, &rcvhwm, sizeof(rcvhwm));*/
     serverToClientPublisher.bind("tcp://*:5555");
