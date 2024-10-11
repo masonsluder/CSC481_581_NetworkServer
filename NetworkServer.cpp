@@ -48,16 +48,11 @@ int main(int argc, char* argv[]) {
     // construct a PUB (publisher) socket and broadcast information about entity movements to all clients
     zmq::socket_t serverToClientPublisher{ context, zmq::socket_type::pub };
 
+    // Set conflate to only take most recent message
     int conflate = 1;
     zmq_setsockopt(serverToClientPublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
-    //int linger = 0;
-    //zmq_setsockopt(serverToClientPublisher, ZMQ_LINGER, &linger, sizeof(linger));
-    //int backlog = 0;
-    //zmq_setsockopt(serverToClientPublisher, ZMQ_BACKLOG, &backlog, sizeof(backlog));
-    /*int rcvhwm = 1;
-    zmq_setsockopt(serverToClientPublisher, ZMQ_RCVHWM, &rcvhwm, sizeof(rcvhwm));*/
     serverToClientPublisher.bind("tcp://*:5555");
-    //serverToClientPublisher.set(zmq::sockopt::subscribe, "");
+
     // construct a REP (reply) socket to send client identifier information back to client
     zmq::socket_t replyToClient{ context, zmq::socket_type::rep };
     replyToClient.bind("tcp://*:5556");
