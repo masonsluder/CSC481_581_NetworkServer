@@ -4,10 +4,6 @@
 #include <string>
 
 #include "networkMovingEntity.h"
-//#include "draw.h"
-//#include "global.h"
-//#include "definitions.h"
-//#include "collisions.h"
 #include "NetworkVector2D.h"
 
 namespace Entities {
