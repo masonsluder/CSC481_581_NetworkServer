@@ -15,6 +15,10 @@ namespace N_Components {
 
 		// Sets reference to GameObject parent
 		m_parent = parentRef;
+
+		// Sets defaults
+		m_currPauseTimer = pauseLength;
+		m_isReversed = false;
 	}
 
 	void N_MovingPattern::update() {
@@ -39,6 +43,10 @@ namespace N_Components {
 
 		// Updates the position of the transform using the normalized distance calculated
 		transform->updatePosition(normalizedDistance);
+
+		// TODO: Implement destination swapping and pause timer activation so that the object properly moves
+		// back and forth
+
 	}
 
 }
