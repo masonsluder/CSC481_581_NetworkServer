@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef RIGIDBODY_H
-#define RIGIDBODY_H
+#ifndef N_RIGIDBODY_H
+#define N_RIGIDBODY_H
 
 #include "n_component.h"
 #include "networkVector2D.h"
@@ -13,7 +13,7 @@ namespace N_Components {
 	class N_RigidBody : public virtual N_Component {
 	protected:
 		// Whether the object moves and is affected by physics
-		bool m_isStatic;
+		bool m_isKinematic;
 		// The mass of the object
 		float m_mass;
 
@@ -29,7 +29,7 @@ namespace N_Components {
 
 	public:
 
-		N_RigidBody(float mass, bool isStatic, SDL_Rect collider, bool isTrigger);
+		N_RigidBody(float mass, bool isKinematic, SDL_Rect collider, bool isTrigger);
 
 		~N_RigidBody() override;
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef TEXTUREMESH_H
-#define TEXTUREMESH_H
+#ifndef N_TEXTUREMESH_H
+#define N_TEXTUREMESH_H
 
 #include "n_component.h"
 

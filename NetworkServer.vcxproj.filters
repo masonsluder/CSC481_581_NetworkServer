@@ -75,6 +75,9 @@
     <ClCompile Include="n_GameObject.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="n_movingPattern.cpp">
+      <Filter>Source Files\Entities\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entityHandler.h">
@@ -111,6 +114,9 @@
       <Filter>Header Files\Entities\Components</Filter>
     </ClInclude>
     <ClInclude Include="n_transform.h">
+      <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="n_movingPattern.h">
       <Filter>Header Files\Entities\Components</Filter>
     </ClInclude>
   </ItemGroup>

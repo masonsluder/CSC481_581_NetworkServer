@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#ifndef N_COMPONENT_H
+#define N_COMPONENT_H
 
 namespace N_Components {
 

@@ -2,13 +2,13 @@
 
 namespace N_Components {
 
-	N_RigidBody::N_RigidBody(float mass, bool isStatic, SDL_Rect collider, bool isTrigger) {
+	N_RigidBody::N_RigidBody(float mass, bool isKinematic, SDL_Rect collider, bool isTrigger) {
 		// Create new vectors at (0,0) for velocity and acceleration
 		m_velocity = new Utils::Vector2D();
 		m_acceleration = new Utils::Vector2D();
 		// Set mass and whether the object is able to move/be able to be affected by physics
 		m_mass = mass;
-		m_isStatic = isStatic;
+		m_isKinematic = isKinematic;
 		// Set collider options and whether it serves as a trigger
 		m_collider = collider;
 		m_isTrigger = isTrigger;

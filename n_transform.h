@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef TRANSFORM_H
-#define TRANSFORM_H
+#ifndef N_TRANSFORM_H
+#define N_TRANSFORM_H
 
 #include "n_component.h"
 #include "networkVector2D.h"

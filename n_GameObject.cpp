@@ -19,7 +19,7 @@ N_GameObject::N_GameObject(){
 	// Add default GameObject values
 	m_uuid = -1;
 	addComponent<N_Components::N_Transform>(
-		Utils::Vector2D(0,0), 
+		Utils::Vector2D(0, 0), 
 		nullptr, 
 		Utils::Vector2D(1, 1), 
 		Utils::Vector2D(1, 1)
