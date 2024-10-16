@@ -25,6 +25,18 @@
     <Filter Include="Header Files\Utils">
       <UniqueIdentifier>{95e9f627-9b2d-4257-9e9c-d685d3a8c84c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Entities\Old">
+      <UniqueIdentifier>{3699be4b-ffe5-4404-82c5-5292bb8834f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities\Old">
+      <UniqueIdentifier>{1f99b12b-08c9-4355-b2d6-52571f072e14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities\Components">
+      <UniqueIdentifier>{96d815ce-5ab8-4656-9907-51f5f0bffeff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entities\Components">
+      <UniqueIdentifier>{02b609b9-c36f-4927-9be9-4cbe8d35e5a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="networkServer.cpp">
@@ -32,15 +44,6 @@
     </ClCompile>
     <ClCompile Include="entityHandler.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="networkEntity.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="networkMovingEntity.cpp">
-      <Filter>Source Files\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="networkPlayer.cpp">
-      <Filter>Source Files\Entities</Filter>
     </ClCompile>
     <ClCompile Include="networkTimeline.cpp">
       <Filter>Source Files\Utils</Filter>
@@ -51,19 +54,31 @@
     <ClCompile Include="networkThread.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="networkEntity.cpp">
+      <Filter>Source Files\Entities\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="networkMovingEntity.cpp">
+      <Filter>Source Files\Entities\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="networkPlayer.cpp">
+      <Filter>Source Files\Entities\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="n_rigidBody.cpp">
+      <Filter>Source Files\Entities\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="n_textureMesh.cpp">
+      <Filter>Source Files\Entities\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="n_transform.cpp">
+      <Filter>Source Files\Entities\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="n_GameObject.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="entityHandler.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="networkEntity.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="networkMovingEntity.h">
-      <Filter>Header Files\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="networkPlayer.h">
-      <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="networkTimeline.h">
       <Filter>Header Files\Utils</Filter>
@@ -73,6 +88,30 @@
     </ClInclude>
     <ClInclude Include="networkThread.h">
       <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="networkEntity.h">
+      <Filter>Header Files\Entities\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="networkMovingEntity.h">
+      <Filter>Header Files\Entities\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="networkPlayer.h">
+      <Filter>Header Files\Entities\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="n_GameObject.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="n_component.h">
+      <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="n_rigidBody.h">
+      <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="n_textureMesh.h">
+      <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="n_transform.h">
+      <Filter>Header Files\Entities\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
