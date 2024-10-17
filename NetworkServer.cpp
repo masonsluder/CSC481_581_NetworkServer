@@ -32,8 +32,7 @@ typedef struct {
 * https://zeromq.org/socket-api/?language=cpp&library=cppzmq#publish-subscribe-pattern
 */
 int main(int argc, char* argv[]) {
-
-	int clientIteration = 0;
+    int clientIteration = 0;
 	int clientIdentifierCounter = 0;
 
     int networkConfigurationSetting = 1;
