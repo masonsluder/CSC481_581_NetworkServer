@@ -58,6 +58,12 @@ namespace N_Components {
 		void setPosition(float positionX, float positionY);
 
 		/**
+		* Sets the position using the two float values provided
+		* @param other: The position to set
+		*/
+		void setPosition(Utils::Vector2D other);
+
+		/**
 		 * Returns the height and width
 		 * @return m_size
 		 */

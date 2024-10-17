@@ -147,4 +147,12 @@ namespace Utils {
 			throw std::invalid_argument("Invalid input: could not convert to float.");
 		}
 	}
+
+	bool Vector2D::equals(Utils::Vector2D other) {
+		return (x == other.x && y == other.y);
+	}
+
+	bool Vector2D::greaterThanOrEqualToXOrY(Utils::Vector2D other) {
+		return (x >= other.x || y >= other.y);
+	}
 }

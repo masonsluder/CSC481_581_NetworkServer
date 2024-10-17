@@ -17,36 +17,53 @@ namespace N_Components {
 		m_parent = parentRef;
 
 		// Sets defaults
-		m_currPauseTimer = pauseLength;
+		m_currPauseTimer = 0;
 		m_isReversed = false;
 	}
 
 	void N_MovingPattern::update() {
-		// Get Transform component
-		N_Components::N_Transform *transform = m_parent->getComponent<N_Components::N_Transform>();
-		// Get time from object
-		double deltaTimeInSecs = m_parent->getDeltaTimeInSecsOfObject();
+		// Only update position if the MovingObject is not paused
+		if (m_currPauseTimer <= 0) {
 
-		// Get distance from destination
-		Utils::Vector2D distance;
-		// If reversed, calculate distance to start position
-		if (m_isReversed) {
-			distance = m_startPosition.subtract(*transform->getPosition());
+			// Get Transform component
+			N_Components::N_Transform* transform = m_parent->getComponent<N_Components::N_Transform>();
+			// Get time from object
+			double deltaTimeInSecs = m_parent->getDeltaTimeInSecsOfObject();
+
+			// Get distance from destination
+			Utils::Vector2D distance;
+			// If reversed, calculate distance to start position
+			if (m_isReversed) {
+				distance = m_startPosition.subtract(*transform->getPosition());
+			}
+			else { // If not, then calculate distance to end position
+				distance = m_endPosition.subtract(*transform->getPosition());
+			}
+
+			// Calculate the distance to be moved in both x and y directions using speed and timestep as a magnitude
+			Utils::Vector2D normalizedDistance =
+				distance.normalizeVector().multConst(m_speed).multConst(deltaTimeInSecs);
+
+			// Updates the position of the transform using the normalized distance calculated
+			transform->updatePosition(normalizedDistance);
+
+			
+			// Detects if the object has reached either the start or end positions of its path
+			if (transform->getPosition()->greaterThanOrEqualToXOrY(m_startPosition)) {
+				m_isReversed = false;
+				m_currPauseTimer = m_pauseLength;
+				transform->setPosition(m_startPosition);
+			}
+			else if (transform->getPosition()->greaterThanOrEqualToXOrY(m_endPosition)) {
+				m_isReversed = true;
+				m_currPauseTimer = m_pauseLength;
+				transform->setPosition(m_endPosition);
+			}
+
 		}
-		else { // If not, then calculate distance to end position
-			distance = m_endPosition.subtract(*transform->getPosition());
+		else { // Decrement pause timer
+			m_currPauseTimer--;
 		}
-
-		// Calculate the distance to be moved in both x and y directions using speed and timestep as a magnitude
-		Utils::Vector2D normalizedDistance =
-			distance.normalizeVector().multConst(m_speed).multConst(deltaTimeInSecs);
-
-		// Updates the position of the transform using the normalized distance calculated
-		transform->updatePosition(normalizedDistance);
-
-		// TODO: Implement destination swapping and pause timer activation so that the object properly moves
-		// back and forth
-
 	}
 
 }

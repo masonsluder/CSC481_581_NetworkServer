@@ -54,6 +54,15 @@ namespace N_Components {
 	}
 
 	/**
+	* Sets the position using the two float values provided
+	* @param positionX: The x component of the position
+	* @param positionY: The y component of the position
+	*/
+	void N_Transform::setPosition(Utils::Vector2D other) {
+		*m_position = other;
+	}
+
+	/**
 	* Returns the height and width
 	* @return m_size
 	*/
