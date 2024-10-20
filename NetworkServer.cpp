@@ -73,10 +73,6 @@ int main(int argc, char* argv[]) {
     N_GameObjectManager* gameObjectManager;
     gameObjectManager = new N_GameObjectManager(timeline);
 
-    //(float scaleX, float scaleY, float positionX, float positionY,
-	//float width, float height, float mass, std::string textureFilepath,
-	//Utils::Vector2D startPosition, Utils::Vector2D endPosition, float speed, int pauseLength)
-
     N_MovingObject* movingBox = new N_MovingObject(
         1.0f, 1.0f,
         550.0f, 550.0f,
