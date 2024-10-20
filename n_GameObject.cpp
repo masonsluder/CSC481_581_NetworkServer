@@ -4,6 +4,7 @@
 #include "n_textureMesh.h"
 #include "n_movingPattern.h"
 #include "n_transform.h"
+#include "n_playerInput.h"
 
 /*
 * Some references include: https://www.gamedeveloper.com/design/the-entity-component-system---an-awesome-game-design-pattern-in-c-part-1-
@@ -94,6 +95,15 @@ void N_GameObject::from_json(const json& j) {
 			textureMeshData["texturefilepath"]
 		);
 	}
+
+	if (j.contains("playerinput")) {
+		auto playerInputData = j["playerinput"];
+		addComponent<N_Components::N_PlayerInputPlatformer>(
+			playerInputData["maxspeed"],
+			Utils::Vector2D(playerInputData["jumpvector"]["x"], playerInputData["jumpvector"]["y"]),
+			this
+		);
+	}
 }
 
 void N_GameObject::to_json(json& j) {
@@ -127,13 +137,13 @@ void N_GameObject::to_json(json& j) {
 		};
 	}
 
-	/*N_Components::N_PlayerInputPlatformer* playerInput = getComponent<N_Components::N_PlayerInputPlatformer>();
+	N_Components::N_PlayerInputPlatformer* playerInput = getComponent<N_Components::N_PlayerInputPlatformer>();
 	if (playerInput) {
 		j["playerinput"] = {
 			{"maxspeed", playerInput->getMaxSpeed()},
 			{"jumpvector", {{"x", playerInput->getJumpVector().x}, {"y", playerInput->getJumpVector().y}}}
 		};
-	}*/
+	}
 }
 
 // Example for main:

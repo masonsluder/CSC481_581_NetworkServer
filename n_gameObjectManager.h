@@ -53,7 +53,7 @@ public:
 	* @param gameObjectString: string containing movingObject information from the server
 	* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 	*/
-	void serialize(std::string& outputString);
+	void serialize(std::string& outputString, bool includePlayers);
 
 	/**
 	* Returns the objects map

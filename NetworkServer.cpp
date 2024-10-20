@@ -173,6 +173,7 @@ int main(int argc, char* argv[]) {
             //player.setUUID(playerUUID);
 
             // Add player to GameObjectManager
+            gameObjectManager->insert(playerGO);
             gameObjectManager->insertPlayer(playerGO);
    
             // Add new client to list of clients
@@ -194,40 +195,38 @@ int main(int argc, char* argv[]) {
             zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + j.dump());
             replyToClient.send(msg, zmq::send_flags::none);
 
-            if (networkConfigurationSetting == 2) {
-                std::stringstream ss;
-                ss.str("");
-                ss << std::clock() << "\n";
-                std::string gameObjectString;
-                gameObjectManager->serialize(gameObjectString);
-                //std::cout << "Game Objects: " << gameObjectString << "\n";
-                zmq::message_t infoStr(ss.str() + gameObjectString/*entityHandler->toString()*/);
-                zmq_connect(serverToClientPublisher, "tcp://:5555");
-                serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
-                zmq_disconnect(serverToClientPublisher, "tcp://:5555");
-            }
+            std::stringstream ss;
+            ss.str("");
+            ss << std::clock() << "\n";
+            std::string gameObjectString;
+            gameObjectManager->serialize(gameObjectString, true);
+            //std::cout << "Game Objects: " << gameObjectString << "\n";
+            zmq::message_t infoStr(ss.str() + gameObjectString/*entityHandler->toString()*/);
+            std::cout << "Game Objects: " << gameObjectString << "\n";
+            zmq_connect(serverToClientPublisher, "tcp://:5555");
+            serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
+            zmq_disconnect(serverToClientPublisher, "tcp://:5555");
         }
         // Send all entity information to every client.
         std::stringstream ss;
         ss.str("");
         ss << std::clock() << "\n";
         std::string gameObjectString;
-        gameObjectManager->serialize(gameObjectString);
-        std::cout << "Game Objects: " << gameObjectString << "\n";
+        gameObjectManager->serialize(gameObjectString, false);
         zmq::message_t infoStr(ss.str() + gameObjectString/*entityHandler->toString()*/);
         zmq_connect(serverToClientPublisher, "tcp://:5555");
         serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
         zmq_disconnect(serverToClientPublisher, "tcp://:5555");
 
-        // Receive client info
-        zmq::message_t clientInfo;
-        clientToServerSubscriber.recv(clientInfo, zmq::recv_flags::dontwait);
-        if (!clientInfo.empty()) {
-            // Create player from string and update their information
-            Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
-            // Insert and update/create a new player into the Entity maps
-            entityHandler->insertPlayer(updatedPlayer);
-        }
+        //// Receive client info
+        //zmq::message_t clientInfo;
+        //clientToServerSubscriber.recv(clientInfo, zmq::recv_flags::dontwait);
+        //if (!clientInfo.empty()) {
+        //    // Create player from string and update their information
+        //    Entities::Player updatedPlayer = *Entities::Player::fromString(clientInfo.to_string());
+        //    // Insert and update/create a new player into the Entity maps
+        //    entityHandler->insertPlayer(updatedPlayer);
+        //}
 
 		// Make so that server only sends every 1/40th of a second or so
 		std::this_thread::sleep_for(std::chrono::milliseconds(15));

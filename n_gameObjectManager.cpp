@@ -81,15 +81,16 @@ void N_GameObjectManager::deserialize(std::string gameObjectString, int networkT
 * @param gameObjectString: string containing movingObject information from the server
 * @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 */
-void N_GameObjectManager::serialize(std::string& outputString) {
+void N_GameObjectManager::serialize(std::string& outputString, bool includePlayers) {
 	// TODO: Adjust for use in peer-to-peer where only the player's information needs to be sent.
 	// Probably don't need to iterate, but need to have the local player field for conversion
 	json j;
-
 	for (const auto& [id, go] : *m_objects) {
-		json gameObjectJson;
-		go->to_json(gameObjectJson);
-		j.push_back(gameObjectJson);
+		if (includePlayers || !includePlayers && !go->getComponent<N_Components::N_PlayerInputPlatformer>()) {
+			json gameObjectJson;
+			go->to_json(gameObjectJson);
+			j.push_back(gameObjectJson);
+		}
 	}
 
 	outputString = j.dump(); // Convert JSON to string
@@ -110,8 +111,8 @@ std::map<int, N_GameObject*>* N_GameObjectManager::getObjectMap() {
 void N_GameObjectManager::insert(N_GameObject* go) {
 	// Sets UUID for the inserted object before adding it, if new
 	if (go->getUUID() == 0) {
+        m_idTracker++;
 		go->setUUID(m_idTracker);
-		m_idTracker++;
 	}
 
 	// Adds or inserts existing information into the Manager
@@ -125,10 +126,10 @@ void N_GameObjectManager::insert(N_GameObject* go) {
 */
 void N_GameObjectManager::insertPlayer(N_PlayerGO* go) {
 	// Sets UUID for the inserted object before adding it, if new
-	if (go->getUUID() == 0) {
-		go->setUUID(m_idTracker);
+	/*if (go->getUUID() == 0) {
 		m_idTracker++;
-	}
+		go->setUUID(m_idTracker);
+	}*/
 
 	// Adds players into the map
 	m_players->insert_or_assign(go->getUUID(), go);
