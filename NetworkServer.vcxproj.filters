@@ -87,6 +87,9 @@
     <ClCompile Include="n_gameObjectManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="n_MovingObject.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="networkTimeline.h">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="n_gameObjectManager.h">
       <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="n_MovingObject.h">
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

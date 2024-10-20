@@ -29,7 +29,7 @@ namespace N_Components {
 
 	public:
 
-		N_RigidBody(float mass, bool isKinematic, SDL_Rect collider, bool isTrigger);
+		N_RigidBody(float mass, bool isKinematic, SDL_Rect collider, int colliderType);
 
 		~N_RigidBody() override;
 
@@ -74,6 +74,14 @@ namespace N_Components {
 		* Sets the acceleration value to the provided vector
 		*/
 		void setAcceleration(Utils::Vector2D other);
+
+		void setColliderCoordinates(float x, float y);
+
+		void setColliderCoordinates(Utils::Vector2D newCoords);
+
+		bool isKinematic();
+
+		int getColliderType();
 	};
 
 }

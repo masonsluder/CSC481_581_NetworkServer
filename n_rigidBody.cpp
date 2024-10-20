@@ -2,7 +2,7 @@
 
 namespace N_Components {
 
-	N_RigidBody::N_RigidBody(float mass, bool isKinematic, SDL_Rect collider, bool isTrigger) {
+	N_RigidBody::N_RigidBody(float mass, bool isKinematic, SDL_Rect collider, int colliderType) {
 		// Create new vectors at (0,0) for velocity and acceleration
 		m_velocity = new Utils::Vector2D();
 		m_acceleration = new Utils::Vector2D();
@@ -11,7 +11,7 @@ namespace N_Components {
 		m_isKinematic = isKinematic;
 		// Set collider options and whether it serves as a trigger
 		m_collider = collider;
-		m_isTrigger = isTrigger;
+		m_colliderType = colliderType;
 	}
 
 	N_RigidBody::~N_RigidBody() {
@@ -78,6 +78,24 @@ namespace N_Components {
 	*/
 	void N_RigidBody::setAcceleration(Utils::Vector2D other) {
 		*m_acceleration = other;
+	}
+
+	void N_RigidBody::setColliderCoordinates(float x, float y) {
+		m_collider.x = x;
+		m_collider.y = y;
+	}
+
+	void N_RigidBody::setColliderCoordinates(Utils::Vector2D newCoords) {
+		m_collider.x = newCoords.x;
+		m_collider.y = newCoords.y;
+	}
+
+	bool N_RigidBody::isKinematic() {
+		return m_isKinematic;
+	}
+
+	int N_RigidBody::getColliderType() {
+		return m_colliderType;
 	}
 
 }

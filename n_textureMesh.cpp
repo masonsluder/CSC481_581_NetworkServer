@@ -17,7 +17,7 @@ namespace N_Components {
 	}
 
 	void N_TextureMesh::update() {
-		// TODO: Current animation state when available and applicable
+		// TODO: Current animation state when available and applicable (if we ever do this)
 	}
 
 	/**

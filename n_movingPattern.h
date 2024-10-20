@@ -33,7 +33,7 @@ namespace N_Components {
 
 	public:
 
-		N_MovingPattern(Utils::Vector2D startPosition, Utils::Vector2D endPosition, float speed, bool pauseLength, N_GameObject *parentRef);
+		N_MovingPattern(Utils::Vector2D startPosition, Utils::Vector2D endPosition, float speed, int pauseLength, N_GameObject *parentRef);
 
 		~N_MovingPattern() {}
 

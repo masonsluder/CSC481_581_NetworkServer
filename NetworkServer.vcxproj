@@ -143,6 +143,7 @@
     <ClCompile Include="networkTimeline.cpp" />
     <ClCompile Include="networkVector2D.cpp" />
     <ClCompile Include="n_gameObjectManager.cpp" />
+    <ClCompile Include="n_MovingObject.cpp" />
     <ClCompile Include="n_movingPattern.cpp" />
     <ClCompile Include="n_rigidBody.cpp" />
     <ClCompile Include="n_textureMesh.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="networkVector2D.h" />
     <ClInclude Include="n_GameObject.h" />
     <ClInclude Include="n_gameObjectManager.h" />
+    <ClInclude Include="n_MovingObject.h" />
     <ClInclude Include="n_movingPattern.h" />
     <ClInclude Include="n_rigidBody.h" />
     <ClInclude Include="n_textureMesh.h" />

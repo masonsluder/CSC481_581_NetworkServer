@@ -4,7 +4,7 @@
 
 namespace N_Components {
 
-	N_MovingPattern::N_MovingPattern(Utils::Vector2D startPosition, Utils::Vector2D endPosition, float speed, bool pauseLength, N_GameObject* parentRef) {
+	N_MovingPattern::N_MovingPattern(Utils::Vector2D startPosition, Utils::Vector2D endPosition, float speed, int pauseLength, N_GameObject* parentRef) {
 		// Set start and end positions for movement
 		m_startPosition = startPosition;
 		m_endPosition = endPosition;
