@@ -25,7 +25,7 @@ namespace N_Components {
 		/**
 		* Constructs transform with all necessary fields
 		*/
-		N_Transform(Utils::Vector2D position, Utils::Vector2D* offsetRef, Utils::Vector2D size, Utils::Vector2D scale);
+		N_Transform(Utils::Vector2D position, Utils::Vector2D size, Utils::Vector2D scale);
 
 		/**
 		* Destructor for the Transform

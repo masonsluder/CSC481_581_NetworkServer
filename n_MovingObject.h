@@ -4,9 +4,7 @@
 #define N_MOVINGOBJECT_H
 
 #include "n_GameObject.h"
-
 #include "networkVector2D.h"
-#include "n_movingPattern.h"
 
 class N_MovingObject : public N_GameObject {
 

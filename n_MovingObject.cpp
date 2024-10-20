@@ -1,5 +1,8 @@
 #include "n_MovingObject.h"
-
+#include "n_transform.h"
+#include "n_movingPattern.h"
+#include "n_rigidBody.h"
+#include "n_textureMesh.h"
 
 N_MovingObject::N_MovingObject(float scaleX, float scaleY, float positionX, float positionY,
 	float width, float height, float mass, std::string textureFilepath,
@@ -16,7 +19,8 @@ N_MovingObject::N_MovingObject(float scaleX, float scaleY, float positionX, floa
 		mass,
 		true, // MovingObject should always be kinematic for the time being as collisions are handled client-side
 		SDL_Rect() = { (int)positionX, (int)positionY, (int)(scaleX * width), (int)(scaleY * height) },
-		0 // Default collider type (normal collision)
+		0, // Default collider type (normal collision)
+		this
 	);
 	// Add TextureMesh Component
 	addComponent<N_Components::N_TextureMesh>(textureFilepath);

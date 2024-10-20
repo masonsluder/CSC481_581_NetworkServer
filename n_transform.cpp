@@ -5,7 +5,7 @@ namespace N_Components {
 	/**
 	* Constructs transform with all necessary fields
 	*/
-	N_Transform::N_Transform(Utils::Vector2D position, Utils::Vector2D* offsetRef, Utils::Vector2D size, Utils::Vector2D scale) {
+	N_Transform::N_Transform(Utils::Vector2D position, Utils::Vector2D size, Utils::Vector2D scale) {
 		// Set position values
 		m_position = new Utils::Vector2D();
 		*m_position = position;

@@ -4,9 +4,8 @@
 #define N_MOVINGPATTERN_H
 
 #include "n_component.h"
-
-#include "n_GameObject.h"
 #include "networkVector2D.h"
+#include "n_GameObject.h"
 
 namespace N_Components {
 

@@ -5,6 +5,7 @@
 
 #include "n_component.h"
 #include "networkVector2D.h"
+#include "n_GameObject.h"
 
 #include <SDL.h>
 
@@ -18,18 +19,22 @@ namespace N_Components {
 		float m_mass;
 
 		// The velocity of the object
-		Utils::Vector2D *m_velocity;
+		Utils::Vector2D* m_velocity;
 		// The acceleration of the object
-		Utils::Vector2D *m_acceleration;
+		Utils::Vector2D* m_acceleration;
 
-		// Determines the type of collider is being used for the RigidBody (0 = normal collider, 1 = death zone, 2 = boundary)
-		int m_colliderType;
 		// The collider of the GameObject
-		SDL_Rect m_collider;
+		SDL_Rect* m_collider;
+
+		// 0 = normal collider, 1 = death zone, 2 = boundary
+		int m_colliderType;
+
+		// Reference to the parent GameObject to communicate with other components
+		N_GameObject* m_parent;
 
 	public:
 
-		N_RigidBody(float mass, bool isKinematic, SDL_Rect collider, int colliderType);
+		N_RigidBody(float mass, bool isKinematic, SDL_Rect collider, int colliderType, N_GameObject* parentRef);
 
 		~N_RigidBody() override;
 

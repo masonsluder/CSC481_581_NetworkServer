@@ -1,5 +1,9 @@
 #include "n_GameObject.h"
 
+#include "n_rigidBody.h"
+#include "n_textureMesh.h"
+#include "n_movingPattern.h"
+#include "n_transform.h"
 
 /*
 * Some references include: https://www.gamedeveloper.com/design/the-entity-component-system---an-awesome-game-design-pattern-in-c-part-1-
@@ -13,7 +17,6 @@ N_GameObject::N_GameObject(){
 	m_uuid = -1;
 	addComponent<N_Components::N_Transform>(
 		Utils::Vector2D(0, 0), 
-		nullptr, 
 		Utils::Vector2D(1, 1), 
 		Utils::Vector2D(1, 1)
 	);
@@ -26,7 +29,6 @@ N_GameObject::N_GameObject(float scaleX, float scaleY, float positionX, float po
 	// Add Transform component, which is required for all GameObjects
 	addComponent<N_Components::N_Transform>(
 		Utils::Vector2D(positionX, positionY),
-		cameraPos,
 		Utils::Vector2D(width, height),
 		Utils::Vector2D(scaleX, scaleY)
 	);

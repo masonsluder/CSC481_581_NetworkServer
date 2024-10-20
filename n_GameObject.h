@@ -4,10 +4,6 @@
 #define N_GAMEOBJECT_H
 
 #include "n_component.h"
-#include "n_transform.h"
-#include "n_rigidBody.h"
-#include "n_textureMesh.h"
-#include "n_movingPattern.h"
 
 #include "networkVector2D.h"
 #include "json.hpp"

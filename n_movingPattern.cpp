@@ -1,5 +1,4 @@
 #include "n_movingPattern.h"
-
 #include "n_transform.h"
 
 namespace N_Components {
