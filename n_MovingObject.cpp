@@ -8,6 +8,9 @@ N_MovingObject::N_MovingObject(float scaleX, float scaleY, float positionX, floa
 	float width, float height, float mass, std::string textureFilepath,
 	Utils::Vector2D startPosition, Utils::Vector2D endPosition, float speed, int pauseLength) {
 
+	// Default UUID
+	m_uuid = 0;
+
 	// Add Transform Component
 	addComponent<N_Components::N_Transform>(
 		Utils::Vector2D(positionX, positionY),

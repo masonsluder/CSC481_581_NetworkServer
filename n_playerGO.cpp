@@ -5,6 +5,9 @@
 N_PlayerGO::N_PlayerGO(float scaleX, float scaleY, float positionX, float positionY, float width, float height, float mass,
 	std::string textureFilepath, bool isKinematic, float jumpVectorX, float jumpVectorY, float maxSpeed) {
 
+	// Default UUID
+	m_uuid = 0;
+
 	// Add transform component
 	addComponent<N_Components::N_Transform>(
 		Utils::Vector2D(positionX, positionY),

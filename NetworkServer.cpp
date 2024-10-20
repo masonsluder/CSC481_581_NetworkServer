@@ -18,7 +18,12 @@
 #include "n_gameObjectManager.h"
 
 #include "n_MovingObject.h"
+#include "n_playerGO.h"
 
+#include "json.hpp"
+using json = nlohmann::json;
+
+// Struct that stores simple client identification information
 typedef struct {
     int m_id;
     int m_iteration;
@@ -138,17 +143,17 @@ int main(int argc, char* argv[]) {
             clientIdentifier[8] = '\0';
 
             // Create a player Entity (Temp: Make more malleable in the future)
-            Entities::Player player = Entities::Player(
-                1.0, 1.0,
-                250.0, 250.0,
-                15.0, 25.0,
-                50.0,
-                "./Assets/Textures/DefaultPlayerTexture1.png",
-                false,
-                true,
-                0.0f, -7000.0f,
-                100.0f
-            );
+            //Entities::Player player = Entities::Player(
+            //    1.0, 1.0,
+            //    250.0, 250.0,
+            //    15.0, 25.0,
+            //    50.0,
+            //    "./Assets/Textures/DefaultPlayerTexture1.png",
+            //    false,
+            //    true,
+            //    0.0f, -7000.0f,
+            //    100.0f
+            //);
 
             
             // Create player game object
@@ -164,8 +169,8 @@ int main(int argc, char* argv[]) {
             );
 
             // Add player to entity list
-            int playerUUID = entityHandler->insertPlayer(player);
-            player.setUUID(playerUUID);
+            //int playerUUID = entityHandler->insertPlayer(player);
+            //player.setUUID(playerUUID);
 
             // Add player to GameObjectManager
             gameObjectManager->insertPlayer(playerGO);
@@ -180,7 +185,13 @@ int main(int argc, char* argv[]) {
             //std::cout << "Client Identifier Initialized: " << clientIdentifier << "\n";
 
             // Send the identifier, as well as Player object back to the client
-            zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + player.toString());
+
+            // Generate json_string for the player
+            json j;
+            playerGO->to_json(j);
+
+            //zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + player.toString());
+            zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + j.dump());
             replyToClient.send(msg, zmq::send_flags::none);
 
             if (networkConfigurationSetting == 2) {
