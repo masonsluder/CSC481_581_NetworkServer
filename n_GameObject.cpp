@@ -1,12 +1,5 @@
 #include "n_GameObject.h"
-#include "networkVector2D.h"
-//#include "transform.h"
-//#include "rigidBody.h"
 
-#include <iostream>
-#include <map>
-#include <vector>
-#include <typeindex>
 
 /*
 * Some references include: https://www.gamedeveloper.com/design/the-entity-component-system---an-awesome-game-design-pattern-in-c-part-1-
@@ -59,6 +52,79 @@ int N_GameObject::getUUID() {
 
 double N_GameObject::getDeltaTimeInSecsOfObject() {
 	return m_currTimeStep;
+}
+
+void N_GameObject::from_json(const json& j) {
+	// Get UUID
+	if (j.contains("uuid")) {
+		m_uuid = j["uuid"].get<int>();
+	}
+	// If it contains each component
+	if (j.contains("transform")) {
+		auto transformData = j["transform"];
+		addComponent<N_Components::N_Transform>(
+			Utils::Vector2D(transformData["position"]["x"], transformData["position"]["y"]),
+			Utils::Vector2D(transformData["width"], transformData["height"]),
+			Utils::Vector2D(transformData["scale"]["x"], transformData["scale"]["y"])
+		);
+	}
+
+	if (j.contains("rigidbody")) {
+		auto transformData = j["transform"];
+		auto rigidBodyData = j["rigidbody"];
+		addComponent<N_Components::N_RigidBody>(
+			rigidBodyData["mass"],
+			rigidBodyData["iskinematic"],
+			SDL_Rect() = { // Use transform data to fill out the rectangle for now
+				(int)transformData["position"]["x"],
+				(int)transformData["position"]["y"],
+				(int)((float)transformData["scale"]["x"] * (float)transformData["width"]),
+				(int)((float)transformData["scale"]["y"] * (float)transformData["height"])
+			},
+			rigidBodyData["collidertype"],
+			this
+		);
+	}
+
+	if (j.contains("texturemesh")) {
+		auto textureMeshData = j["texturemesh"];
+		addComponent<N_Components::N_TextureMesh>(
+			textureMeshData["texturefilepath"]
+		);
+	}
+}
+
+void N_GameObject::to_json(json& j) {
+	// Set UUID
+	j["uuid"] = m_uuid;
+
+	// If it contains each component
+	N_Components::N_Transform* transform = getComponent<N_Components::N_Transform>();
+	if (transform) {
+		j["transform"] = {
+			{"position", {{"x", transform->getPosition()->x}, {"y", transform->getPosition()->y}}},
+			{"width", transform->getSize().x},
+			{"height", transform->getSize().y},
+			{"scale", {{"x", transform->getScale().x}, {"y", transform->getScale().y}}}
+		};
+	}
+
+	N_Components::N_RigidBody* rigidBody = getComponent<N_Components::N_RigidBody>();
+	if (rigidBody) {
+		j["rigidbody"] = {
+			{"mass", rigidBody->getMass()},
+			{"iskinematic", rigidBody->isKinematic()},
+			{"collidertype", rigidBody->getColliderType()}
+		};
+	}
+
+	N_Components::N_TextureMesh* textureMesh = getComponent<N_Components::N_TextureMesh>();
+	if (textureMesh) {
+		j["texturemesh"] = {
+			{"texturefilepath", textureMesh->getTextureFilePath()}
+		};
+	}
+
 }
 
 // Example for main:

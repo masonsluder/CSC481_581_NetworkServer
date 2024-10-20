@@ -37,12 +37,15 @@
     <Filter Include="Source Files\Entities\Components">
       <UniqueIdentifier>{02b609b9-c36f-4927-9be9-4cbe8d35e5a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Managers">
+      <UniqueIdentifier>{42f6439e-16eb-4182-98e1-6794b03234e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managers">
+      <UniqueIdentifier>{49e841cc-49a7-4d2b-8e77-43025278d5b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="networkServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="entityHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="networkTimeline.cpp">
@@ -78,11 +81,14 @@
     <ClCompile Include="n_movingPattern.cpp">
       <Filter>Source Files\Entities\Components</Filter>
     </ClCompile>
+    <ClCompile Include="entityHandler.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="n_gameObjectManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="entityHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="networkTimeline.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
@@ -118,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="n_movingPattern.h">
       <Filter>Header Files\Entities\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="entityHandler.h">
+      <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="n_gameObjectManager.h">
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

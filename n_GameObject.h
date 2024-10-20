@@ -5,8 +5,13 @@
 
 #include "n_component.h"
 #include "n_transform.h"
+#include "n_rigidBody.h"
+#include "n_textureMesh.h"
+#include "n_movingPattern.h"
 
 #include "networkVector2D.h"
+#include "json.hpp"
+using json = nlohmann::json;
 
 #include <typeindex>
 #include <iostream>
@@ -62,13 +67,17 @@ public:
     }
 
     // Update all components attached to game object
-    void update(double deltaTimeInSecs);
+    virtual void update(double deltaTimeInSecs);
 
     void setUUID(int uuid);
 
     int getUUID();
 
     double getDeltaTimeInSecsOfObject();
+
+    void from_json(const json& j);
+
+    void to_json(json& j);
 };
 
 

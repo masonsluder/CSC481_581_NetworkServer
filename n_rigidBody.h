@@ -22,8 +22,8 @@ namespace N_Components {
 		// The acceleration of the object
 		Utils::Vector2D *m_acceleration;
 
-		// Whether the collider is a trigger area (no collision) or not
-		bool m_isTrigger;
+		// Determines the type of collider is being used for the RigidBody (0 = normal collider, 1 = death zone, 2 = boundary)
+		int m_colliderType;
 		// The collider of the GameObject
 		SDL_Rect m_collider;
 

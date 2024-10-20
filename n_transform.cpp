@@ -10,9 +10,6 @@ namespace N_Components {
 		m_position = new Utils::Vector2D();
 		*m_position = position;
 
-		// Set reference to global camera offset value
-		m_cameraOffset = offsetRef;
-
 		// Set size and scale
 		m_size = size;
 		m_scale = scale;

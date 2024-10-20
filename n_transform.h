@@ -16,8 +16,6 @@ namespace N_Components {
 	protected:
 		/** The current position of the GameObject */
 		Utils::Vector2D *m_position;
-		/** The reference to the global camera offset value used to keep track of the camera's position */
-		Utils::Vector2D *m_cameraOffset;
 		/** The size of the GameObject in pixels */
 		Utils::Vector2D m_size;
 		/** The scale of the object to be multiplied by */
