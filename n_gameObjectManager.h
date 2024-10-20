@@ -4,18 +4,19 @@
 #define N_GAMEOBJECTMANAGER_H
 
 #include "n_GameObject.h"
+#include "n_PlayerGO.h"
 #include "networkTimeline.h"
 
 #include <map>
 
-class GameObjectManager {
+class N_GameObjectManager {
 private:
 	// Keeps track of the current ID and assigns it to added GameObjects
 	int m_idTracker;
 	// Map of GameObjects (Key: UUID, Value: GameObject)
 	std::map<int, N_GameObject*>* m_objects;
-	// Map of GameObjects controlled by the server
-	std::map<int, N_GameObject>* m_serverObjects;
+	// Map of player GameObjects
+	std::map<int, N_PlayerGO*>* m_players;
 	// Reference to Timeline for physics calculations
 	Timeline* m_timeline;
 public:
@@ -25,12 +26,12 @@ public:
 	*
 	* @param timeline: Reference to the timeline
 	*/
-	GameObjectManager(Timeline* timelineRef);
+	N_GameObjectManager(Timeline* timelineRef);
 
 	/**
 	* Destructor that frees any allocated memory for the GameObjects
 	*/
-	~GameObjectManager();
+	~N_GameObjectManager();
 
 	/**
 	* Updates each of the GameObjects in the objects map
@@ -65,6 +66,13 @@ public:
 	* @param go GameObject to be added to end of the object map
 	*/
 	void insert(N_GameObject* go);
+
+	/**
+	* Inserts the GameObject into the objects map
+	*
+	* @param go GameObject to be added to end of the object map
+	*/
+	void insertPlayer(N_PlayerGO* go);
 };
 
 #endif

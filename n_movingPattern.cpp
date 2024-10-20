@@ -2,7 +2,6 @@
 #include "n_transform.h"
 
 namespace N_Components {
-
 	N_MovingPattern::N_MovingPattern(Utils::Vector2D startPosition, Utils::Vector2D endPosition, float speed, int pauseLength, N_GameObject* parentRef) {
 		// Set start and end positions for movement
 		m_startPosition = startPosition;
@@ -48,7 +47,7 @@ namespace N_Components {
 
 			
 			// Detects if the object has reached either the start or end positions of its path
-			if (transform->getPosition()->greaterThanOrEqualToXOrY(m_startPosition)) {
+			if (transform->getPosition()->lessThanOrEqualToXOrY(m_startPosition)) {
 				m_isReversed = false;
 				m_currPauseTimer = m_pauseLength;
 				transform->setPosition(m_startPosition);

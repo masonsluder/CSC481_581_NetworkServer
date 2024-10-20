@@ -90,6 +90,12 @@
     <ClCompile Include="n_MovingObject.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="n_playerGO.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="n_playerInput.cpp">
+      <Filter>Source Files\Entities\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="networkTimeline.h">
@@ -136,6 +142,12 @@
     </ClInclude>
     <ClInclude Include="n_MovingObject.h">
       <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="n_playerGO.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="n_playerInput.h">
+      <Filter>Header Files\Entities\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

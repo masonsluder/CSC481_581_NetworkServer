@@ -145,6 +145,8 @@
     <ClCompile Include="n_gameObjectManager.cpp" />
     <ClCompile Include="n_MovingObject.cpp" />
     <ClCompile Include="n_movingPattern.cpp" />
+    <ClCompile Include="n_playerGO.cpp" />
+    <ClCompile Include="n_playerInput.cpp" />
     <ClCompile Include="n_rigidBody.cpp" />
     <ClCompile Include="n_textureMesh.cpp" />
     <ClCompile Include="n_transform.cpp" />
@@ -162,6 +164,8 @@
     <ClInclude Include="n_gameObjectManager.h" />
     <ClInclude Include="n_MovingObject.h" />
     <ClInclude Include="n_movingPattern.h" />
+    <ClInclude Include="n_playerGO.h" />
+    <ClInclude Include="n_playerInput.h" />
     <ClInclude Include="n_rigidBody.h" />
     <ClInclude Include="n_textureMesh.h" />
     <ClInclude Include="n_transform.h" />

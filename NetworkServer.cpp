@@ -15,6 +15,9 @@
 #include "networkMovingEntity.h"
 #include "networkPlayer.h"
 #include "networkTimeline.h"
+#include "n_gameObjectManager.h"
+
+#include "n_MovingObject.h"
 
 typedef struct {
     int m_id;
@@ -61,35 +64,61 @@ int main(int argc, char* argv[]) {
     clientToServerSubscriber.bind("tcp://*:5557");
     clientToServerSubscriber.set(zmq::sockopt::subscribe, "Server");
    
+    Timeline* timeline = new Timeline();
+
     /// Controller for all entities and their physics
     EntityHandler* entityHandler;
     entityHandler = new EntityHandler();
 
-    // Instantiate entities
-	// Create box object that moves (Temp)
-	Entities::MovingEntity* movingBox = new Entities::MovingEntity
-	(
-        1.0, 1.0,
-		550.0, 550.0,
-		10.0,
-		50.0f, 50.0f,
-		"./Assets/Textures/devTexture0.png",
-		false,
-		false,
-		true,
-		false,
-		10,
-		50,
-		800.0,
-		800.0
-	);
+    N_GameObjectManager* gameObjectManager;
+    gameObjectManager = new N_GameObjectManager(timeline);
 
-    entityHandler->insertMovingEntity(*movingBox);
+    //(float scaleX, float scaleY, float positionX, float positionY,
+	//float width, float height, float mass, std::string textureFilepath,
+	//Utils::Vector2D startPosition, Utils::Vector2D endPosition, float speed, int pauseLength)
+
+    N_MovingObject* movingBox = new N_MovingObject(
+        1.0f, 1.0f,
+        550.0f, 550.0f,
+        32.0f, 32.0f,
+        10.0f,
+		"./Assets/Textures/devTexture0.png",
+		Utils::Vector2D(550.0f, 550.0f),
+		Utils::Vector2D(800.0f, 800.0f),
+        40.0f,
+        10
+    );
+
+    gameObjectManager->insert(movingBox);
+
+ //   // Instantiate entities
+	//// Create box object that moves (Temp)
+	//Entities::MovingEntity* movingBox = new Entities::MovingEntity
+	//(
+ //       1.0, 1.0,
+	//	550.0, 550.0,
+	//	10.0,
+	//	50.0f, 50.0f,
+	//	"./Assets/Textures/devTexture0.png",
+	//	false,
+	//	false,
+	//	true,
+	//	false,
+	//	10,
+	//	50,
+	//	800.0,
+	//	800.0
+	//);
+
+    //entityHandler->insertMovingEntity(*movingBox);
 
     // Send out multipart messages forever
     while (true) {
         // Update entity movements
         entityHandler->updateEntities();
+
+        // Update GameObjects
+        gameObjectManager->update();
 
         // REQ model ready to receive requests from the client.
         zmq::message_t clientIdRequest;
@@ -146,18 +175,23 @@ int main(int argc, char* argv[]) {
                 std::stringstream ss;
                 ss.str("");
                 ss << std::clock() << "\n";
-                zmq::message_t infoStr(ss.str() + entityHandler->toString());
+                std::string gameObjectString;
+                gameObjectManager->serialize(gameObjectString);
+                //std::cout << "Game Objects: " << gameObjectString << "\n";
+                zmq::message_t infoStr(ss.str() + gameObjectString/*entityHandler->toString()*/);
                 zmq_connect(serverToClientPublisher, "tcp://:5555");
                 serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
                 zmq_disconnect(serverToClientPublisher, "tcp://:5555");
             }
         }
         // Send all entity information to every client.
-        //std::this_thread::sleep_for(std::chrono::milliseconds(500));
         std::stringstream ss;
         ss.str("");
         ss << std::clock() << "\n";
-        zmq::message_t infoStr(ss.str() + entityHandler->toString());
+        std::string gameObjectString;
+        gameObjectManager->serialize(gameObjectString);
+        std::cout << "Game Objects: " << gameObjectString << "\n";
+        zmq::message_t infoStr(ss.str() + gameObjectString/*entityHandler->toString()*/);
         zmq_connect(serverToClientPublisher, "tcp://:5555");
         serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
         zmq_disconnect(serverToClientPublisher, "tcp://:5555");

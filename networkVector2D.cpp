@@ -155,4 +155,8 @@ namespace Utils {
 	bool Vector2D::greaterThanOrEqualToXOrY(Utils::Vector2D other) {
 		return (x >= other.x || y >= other.y);
 	}
+
+	bool Vector2D::lessThanOrEqualToXOrY(Utils::Vector2D other) {
+		return (x <= other.x || y <= other.y);
+	}
 }

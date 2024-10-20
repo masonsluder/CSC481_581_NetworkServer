@@ -40,6 +40,8 @@ namespace Utils {
 		bool equals(Utils::Vector2D other);
 
 		bool greaterThanOrEqualToXOrY(Utils::Vector2D other);
+
+		bool lessThanOrEqualToXOrY(Utils::Vector2D other);
 	};
 }
 
