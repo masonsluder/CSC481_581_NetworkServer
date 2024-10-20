@@ -150,9 +150,25 @@ int main(int argc, char* argv[]) {
                 100.0f
             );
 
+            
+            // Create player game object
+            N_PlayerGO *playerGO = new N_PlayerGO(
+                1.0f, 1.0f,
+                250.0f, 250.0f,
+                15.0f, 25.0f,
+                50.0f,
+                "./Assets/Textures/DefaultPlayerTexture1.png",
+                false,
+                0.0f, -2000.0f,
+                100.0f
+            );
+
             // Add player to entity list
             int playerUUID = entityHandler->insertPlayer(player);
             player.setUUID(playerUUID);
+
+            // Add player to GameObjectManager
+            gameObjectManager->insertPlayer(playerGO);
    
             // Add new client to list of clients
             ClientIteration newClient = { clientIdentifierCounter, 0, {} };
