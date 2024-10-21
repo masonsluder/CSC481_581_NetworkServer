@@ -158,7 +158,7 @@ int oldMain(int argc, char* argv[]) {
                 50.0f,
                 "./Assets/Textures/DefaultPlayerTexture1.png",
                 false,
-                0.0f, -2000.0f,
+                0.0f, -4000.0f,
                 100.0f
             );
 
