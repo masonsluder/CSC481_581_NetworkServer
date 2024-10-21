@@ -45,19 +45,51 @@ namespace N_Components {
 			// Updates the position of the transform using the normalized distance calculated
 			transform->updatePosition(normalizedDistance);
 
+			//std::cout << "Distance calculated: " << distance.toString() << "\nNormalizedDistance: " << normalizedDistance.toString() << "\n" <<
+			//	"\nSpeed: " << m_speed << "\nDeltaTime: " << deltaTimeInSecs << "\n\n";
 			
-			// Detects if the object has reached either the start or end positions of its path
-			if (transform->getPosition()->lessThanOrEqualToXOrY(m_startPosition)) {
-				m_isReversed = false;
-				m_currPauseTimer = m_pauseLength;
-				transform->setPosition(m_startPosition);
-			}
-			else if (transform->getPosition()->greaterThanOrEqualToXOrY(m_endPosition)) {
-				m_isReversed = true;
-				m_currPauseTimer = m_pauseLength;
-				transform->setPosition(m_endPosition);
-			}
+			Utils::Vector2D position = *transform->getPosition();
 
+			// Cover cases in which it moves just horizontally or vertically
+			if (m_startPosition.x == m_endPosition.x) { // If the object moves horizontally
+				// Check for differences in start and end positions with y
+				if (position.y <= m_startPosition.y) {
+					m_isReversed = false;
+					m_currPauseTimer = m_pauseLength;
+					transform->setPosition(m_startPosition);
+				}
+				else if (position.y >= m_endPosition.y) {
+					m_isReversed = true;
+					m_currPauseTimer = m_pauseLength;
+					transform->setPosition(m_endPosition);
+				}
+			}
+			else if (m_startPosition.y == m_endPosition.y) { // If the object omves vertically
+				// Check for differences in start and end positions with x
+				if (position.x <= m_startPosition.x) {
+					m_isReversed = false;
+					m_currPauseTimer = m_pauseLength;
+					transform->setPosition(m_startPosition);
+				}
+				else if (position.x >= m_endPosition.x) {
+					m_isReversed = true;
+					m_currPauseTimer = m_pauseLength;
+					transform->setPosition(m_endPosition);
+				}
+			}
+			else { // This is for if the moving platform moves on both axes
+				// Detects if the object has reached either the start or end positions of its path
+				if (position.lessThanOrEqualToXOrY(m_startPosition)) {
+					m_isReversed = false;
+					m_currPauseTimer = m_pauseLength;
+					transform->setPosition(m_startPosition);
+				}
+				else if (position.greaterThanOrEqualToXOrY(m_endPosition)) {
+					m_isReversed = true;
+					m_currPauseTimer = m_pauseLength;
+					transform->setPosition(m_endPosition);
+				}
+			}
 		}
 		else { // Decrement pause timer
 			m_currPauseTimer--;

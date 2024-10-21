@@ -84,13 +84,39 @@ int main(int argc, char* argv[]) {
         32.0f, 32.0f,
         10.0f,
 		"./Assets/Textures/devTexture0.png",
-		Utils::Vector2D(550.0f, 550.0f),
-		Utils::Vector2D(800.0f, 800.0f),
+		Utils::Vector2D(250.0f, 350.0f),
+		Utils::Vector2D(600.0f, 350.0f),
         40.0f,
         10
     );
 
+    N_MovingObject* movingBox2 = new N_MovingObject(
+        1.0f, 1.0f,
+        550.0f, 550.0f,
+        100.0f, 16.0f,
+        10.0f,
+        "./Assets/Textures/devLongMoveTexture.png",
+        Utils::Vector2D(150.0f, 250.0f),
+        Utils::Vector2D(150.0f, 800.0f),
+        90.0f,
+        10
+    );
+
+    N_MovingObject* movingBox3 = new N_MovingObject(
+        1.0f, 1.0f,
+        550.0f, 550.0f,
+        100.0f, 16.0f,
+        10.0f,
+        "./Assets/Textures/devLongMoveTexture.png",
+        Utils::Vector2D(300.0f, 500.0f),
+        Utils::Vector2D(600.0f, 800.0f),
+        90.0f,
+        10
+    );
+
     gameObjectManager->insert(movingBox);
+    gameObjectManager->insert(movingBox2);
+    gameObjectManager->insert(movingBox3);
 
  //   // Instantiate entities
 	//// Create box object that moves (Temp)
@@ -115,6 +141,9 @@ int main(int argc, char* argv[]) {
 
     // Send out multipart messages forever
     while (true) {
+        // Update timeline
+        timeline->updateTime();
+
         // Update entity movements
         entityHandler->updateEntities();
 
