@@ -223,25 +223,13 @@ int main(int argc, char* argv[]) {
             //zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + player.toString());
             zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + j.dump());
             replyToClient.send(msg, zmq::send_flags::none);
-
-            std::stringstream ss;
-            ss.str("");
-            ss << std::clock() << "\n";
-            std::string gameObjectString;
-            gameObjectManager->serialize(gameObjectString, true);
-            //std::cout << "Game Objects: " << gameObjectString << "\n";
-            zmq::message_t infoStr(ss.str() + gameObjectString/*entityHandler->toString()*/);
-            std::cout << "Game Objects: " << gameObjectString << "\n";
-            zmq_connect(serverToClientPublisher, "tcp://:5555");
-            serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
-            zmq_disconnect(serverToClientPublisher, "tcp://:5555");
         }
         // Send all entity information to every client.
         std::stringstream ss;
         ss.str("");
         ss << std::clock() << "\n";
         std::string gameObjectString;
-        gameObjectManager->serialize(gameObjectString, false);
+        gameObjectManager->serialize(gameObjectString, true);
         zmq::message_t infoStr(ss.str() + gameObjectString/*entityHandler->toString()*/);
         zmq_connect(serverToClientPublisher, "tcp://:5555");
         serverToClientPublisher.send(infoStr, zmq::send_flags::dontwait);
