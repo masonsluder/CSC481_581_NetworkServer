@@ -75,6 +75,34 @@ void N_GameObjectManager::deserialize(std::string gameObjectString, int networkT
 }
 
 /**
+* Deserializes a string of gameObjects and inserts those GameObjects into the object map.
+* This is meant to read in gameObject information sent from the server
+*
+* @param movingEntityString: string containing movingObject information from the server
+* @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
+*/
+void N_GameObjectManager::deserializeClient(std::string gameObjectString, int networkType) {
+	// TODO: Create new serialization function for MovingObjects once that's implemented into the Server
+	json j = json::parse(gameObjectString);
+
+	// Read in JSON array (should only be one object in peer to peer)
+	std::cout << "Game Object String: " << gameObjectString << "\n";
+	int uuid = j["uuid"].get<int>();
+	// Determine whether the object is new or existing
+	if (!m_players->count(uuid)) { // If it's a new game object
+		N_PlayerGO* go = m_players->at(uuid);
+		go->from_json(j);
+		// Insert new object into the map
+		insertPlayer(go);
+	}
+	else { // If it's an existing game object
+		N_PlayerGO* go = m_players->at(uuid);
+		go->from_json(j);
+	}
+	// Handle network type if necessary
+}
+
+/**
 * Serializes a string of gameObjects and puts them all into one string.
 * This is meant to prepare the gameObject information to send (might only need player itself)
 *
