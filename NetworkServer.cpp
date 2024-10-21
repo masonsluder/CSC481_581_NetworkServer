@@ -324,6 +324,7 @@ int main(int argc, char* argv[]) {
                 zmq::message_t clientInfo;
                 clientToServerSubscriber.recv(clientInfo, zmq::recv_flags::dontwait);
                 if (!clientInfo.empty()) {
+                    std::cout << "SUB FROM CLIENT: " << clientInfo.to_string() << "\n";
                     gameObjectManager->deserializeClient(clientInfo.to_string(), 1);
                 }
             }
@@ -331,7 +332,7 @@ int main(int argc, char* argv[]) {
             // Send all entity information to every client.
             std::string gameObjectString;
             gameObjectManager->serialize(gameObjectString, true);
-            zmq::message_t msg("Client" + std::to_string(clientIdentifierCounter) + "\n" + gameObjectString);
+            zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + gameObjectString);
 
             serverToClientPublisher.send(msg, zmq::send_flags::dontwait);
 
@@ -353,9 +354,10 @@ int main(int argc, char* argv[]) {
         // 1 = Client to server, 2 = Peer to Peer
 
         if (!clientIdRequest.empty()) {
-            networkConfigurationSetting = (int)clientIdRequest.str()[0] - 48;
+            networkConfigurationSetting = std::stoi(clientIdRequest.to_string());
             // Print request information from client
             std::cout << "Publisher: [" << clientIdRequest.to_string() << "]\n";
+            std::cout << "NetworkSetting: [" << networkConfigurationSetting << "]\n";
         }
 
         // If the client sends a request, start handling sending the reply
