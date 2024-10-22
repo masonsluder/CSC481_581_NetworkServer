@@ -113,7 +113,7 @@ void N_GameObject::to_json(json& j) {
 	// If it contains each component
 	N_Components::N_Transform* transform = getComponent<N_Components::N_Transform>();
 	if (transform) {
-		j["transform"] = {
+			j["transform"] = {
 			{"position", {{"x", transform->getPosition()->x}, {"y", transform->getPosition()->y}}},
 			{"width", transform->getSize().x},
 			{"height", transform->getSize().y},

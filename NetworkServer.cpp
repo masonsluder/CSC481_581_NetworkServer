@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Running server.\n";
     // initialize the zmq context with a single IO thread
-    zmq::context_t context{ 2 };
+    zmq::context_t context{ 3 };
 
     // Thread safe map to manage client threads
     std::unordered_map<int, std::thread> clientThreads;
@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
     std::mutex clientStateMutex;
 
     auto handleClient = [&](int clientIdentifierCounter, N_PlayerGO* playerGO) {
-        int portNum = 5558 + clientIdentifierCounter;
+        int portNum = 6658 + clientIdentifierCounter;
         int portNum2 = 6558 + clientIdentifierCounter;
 
         //std::stringstream ss;
@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
         zmq::socket_t clientToServerSubscriber{ context, zmq::socket_type::sub };
 
         // Subscriber for a sub socket that receives disconnect commands from the clients
-        zmq::socket_t disconnectSocket{ context, zmq::socket_type::sub };
+        zmq::socket_t disconnectSocket{ context, zmq::socket_type::rep };
         
 
         // Set conflate to only take most recent message
@@ -140,14 +140,15 @@ int main(int argc, char* argv[]) {
         serverToClientPublisher.bind(ss);
 
         // Bind subscriber to client's port
-        clientToServerSubscriber.bind(ss2);
-
+        if (networkConfigurationSetting == 1) {
+            clientToServerSubscriber.bind(ss2);
+        }
         disconnectSocket.bind("tcp://*:" + std::to_string(4558 + playerGO->getUUID()));
         
         // Subscribe to messages related to client
         clientToServerSubscriber.set(zmq::sockopt::subscribe, "");
         
-        disconnectSocket.set(zmq::sockopt::subscribe, std::to_string(playerGO->getUUID()));
+        //disconnectSocket.set(zmq::sockopt::reply, std::to_string(playerGO->getUUID()));
 
         std::cout << "Server bound to ports: " << portNum << " and " << portNum2 << "\n";
 
@@ -207,6 +208,8 @@ int main(int argc, char* argv[]) {
 
         // Remove client game objects
         gameObjectManager->terminateClient(playerGO->getUUID());
+        zmq::message_t disconnectMsg("Successfully deleted client " + std::to_string(clientIdentifierCounter));
+        disconnectSocket.send(disconnectMsg, zmq::send_flags::none);
     };
 
     // Send out multipart messages forever

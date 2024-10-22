@@ -136,9 +136,9 @@ std::map<int, N_GameObject*>* N_GameObjectManager::getObjectMap() {
 */
 void N_GameObjectManager::terminateClient(int uuidKey) {
 	// Find GameObject, then delete it
-	if (N_GameObject* go = m_players->at(uuidKey)) {
-		m_players->erase(uuidKey);
+	if (N_GameObject* go = m_objects->at(uuidKey)) {
 		m_objects->erase(uuidKey);
+		m_players->erase(uuidKey);
 		delete go;
 	}
 }
