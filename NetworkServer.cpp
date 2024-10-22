@@ -114,10 +114,14 @@ int main(int argc, char* argv[]) {
     auto handleClient = [&](int clientIdentifierCounter, N_PlayerGO* playerGO) {
         int portNum = 5558 + clientIdentifierCounter;
         int portNum2 = 6558 + clientIdentifierCounter;
-        std::stringstream ss;
-        ss << "tcp://*:" << portNum;
-        std::stringstream ss2;
-        ss2 << "tcp://*:" << portNum2;
+
+        //std::stringstream ss;
+        //ss << "tcp://*:" << portNum;
+        //std::stringstream ss2;
+        //ss2 << "tcp://*:" << portNum2;
+
+        const std::string ss = "tcp://*:" + std::to_string(portNum);
+        const std::string ss2 = "tcp://*:" + std::to_string(portNum2);
 
         // Sockets to send and receive messages from client
         // (Receive only for Client-Server network setting)
@@ -133,10 +137,10 @@ int main(int argc, char* argv[]) {
         zmq_setsockopt(serverToClientPublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
         
         // Bind publisher to client's port
-        serverToClientPublisher.bind(ss.str());
+        serverToClientPublisher.bind(ss);
 
         // Bind subscriber to client's port
-        clientToServerSubscriber.bind(ss2.str());
+        clientToServerSubscriber.bind(ss2);
 
         disconnectSocket.bind("tcp://*:" + std::to_string(4558 + playerGO->getUUID()));
         
@@ -170,7 +174,11 @@ int main(int argc, char* argv[]) {
                 if (!disconnectMessage.empty()) {
                     std::cout << "Client_" << clientIdentifierCounter << " disconnected due to timeout.\n";
                     clientState->active = false;
-                    gameObjectManager->terminateClient(std::stoi(disconnectMessage.to_string()));
+
+                    // Remove client game objects
+                    gameObjectManager->terminateClient(playerGO->getUUID());
+                    break;
+                    //gameObjectManager->terminateClient(std::stoi(disconnectMessage.to_string()));
                 }
             }
 
@@ -263,7 +271,7 @@ int main(int argc, char* argv[]) {
             {
                 std::lock_guard<std::mutex> lock(clientThreadsMutex);
                 clientThreads[clientIdentifierCounter] = std::thread(handleClient, clientIdentifierCounter, playerGO);
-                clientThreads[clientIdentifierCounter].detach(); // Run thread independently
+                //clientThreads[clientIdentifierCounter].detach(); // Run thread independently
             }
             // Handle client disconnect
             {
