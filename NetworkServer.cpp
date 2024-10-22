@@ -58,11 +58,6 @@ int main(int argc, char* argv[]) {
     zmq::socket_t replyToClient{ context, zmq::socket_type::rep };
     replyToClient.bind("tcp://*:5556");
 
-    // Subscriber for a sub socket that receives disconnect commands from the clients
-    zmq::socket_t disconnectSocket{ context, zmq::socket_type::sub };
-    disconnectSocket.connect("tcp://*:5550");
-    disconnectSocket.set(zmq::sockopt::subscribe, "");
-
     Timeline* timeline = new Timeline();
 
     N_GameObjectManager* gameObjectManager;
@@ -129,6 +124,10 @@ int main(int argc, char* argv[]) {
         zmq::socket_t serverToClientPublisher{ context, zmq::socket_type::pub };
         zmq::socket_t clientToServerSubscriber{ context, zmq::socket_type::sub };
 
+        // Subscriber for a sub socket that receives disconnect commands from the clients
+        zmq::socket_t disconnectSocket{ context, zmq::socket_type::sub };
+        
+
         // Set conflate to only take most recent message
         int conflate = 1;
         zmq_setsockopt(serverToClientPublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
@@ -139,9 +138,13 @@ int main(int argc, char* argv[]) {
         // Bind subscriber to client's port
         clientToServerSubscriber.bind(ss2.str());
 
+        disconnectSocket.bind("tcp://*:" + std::to_string(4558 + playerGO->getUUID()));
+        
         // Subscribe to messages related to client
         clientToServerSubscriber.set(zmq::sockopt::subscribe, "");
         
+        disconnectSocket.set(zmq::sockopt::subscribe, "");
+
         std::cout << "Server bound to ports: " << portNum << " and " << portNum2 << "\n";
 
         auto& clientState = clientStates[clientIdentifierCounter];
@@ -199,7 +202,6 @@ int main(int argc, char* argv[]) {
 
         // Remove client game objects
         gameObjectManager->terminateClient(playerGO->getUUID());
-        //delete playerGO;
     };
 
     // Send out multipart messages forever
