@@ -147,7 +147,7 @@ int main(int argc, char* argv[]) {
         // Subscribe to messages related to client
         clientToServerSubscriber.set(zmq::sockopt::subscribe, "");
         
-        disconnectSocket.set(zmq::sockopt::subscribe, "");
+        disconnectSocket.set(zmq::sockopt::subscribe, std::to_string(playerGO->getUUID()));
 
         std::cout << "Server bound to ports: " << portNum << " and " << portNum2 << "\n";
 
@@ -174,11 +174,7 @@ int main(int argc, char* argv[]) {
                 if (!disconnectMessage.empty()) {
                     std::cout << "Client_" << clientIdentifierCounter << " disconnected due to timeout.\n";
                     clientState->active = false;
-
-                    // Remove client game objects
-                    gameObjectManager->terminateClient(playerGO->getUUID());
                     break;
-                    //gameObjectManager->terminateClient(std::stoi(disconnectMessage.to_string()));
                 }
             }
 
