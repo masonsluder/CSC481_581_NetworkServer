@@ -201,6 +201,7 @@ int main(int argc, char* argv[]) {
         // Clean up client
         {
             std::lock_guard<std::mutex> lock(clientThreadsMutex);
+            //clientThreads[clientIdentifierCounter].;
             clientThreads.erase(clientIdentifierCounter);
         }
 
@@ -267,7 +268,7 @@ int main(int argc, char* argv[]) {
             {
                 std::lock_guard<std::mutex> lock(clientThreadsMutex);
                 clientThreads[clientIdentifierCounter] = std::thread(handleClient, clientIdentifierCounter, playerGO);
-                //clientThreads[clientIdentifierCounter].detach(); // Run thread independently
+                clientThreads[clientIdentifierCounter].detach(); // Run thread independently
             }
             // Handle client disconnect
             {
