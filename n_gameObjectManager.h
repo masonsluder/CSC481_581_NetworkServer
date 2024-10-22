@@ -70,6 +70,13 @@ public:
 	std::map<int, N_GameObject*>* getObjectMap();
 
 	/**
+	* Terminates the client
+	* 
+	* @param UUID
+	*/
+	void terminateClient(int uuidKey);
+
+	/**
 	* Inserts the GameObject into the objects map
 	*
 	* @param go GameObject to be added to end of the object map
