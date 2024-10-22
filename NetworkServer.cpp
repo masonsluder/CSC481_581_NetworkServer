@@ -58,11 +58,12 @@ int main(int argc, char* argv[]) {
     zmq::socket_t replyToClient{ context, zmq::socket_type::rep };
     replyToClient.bind("tcp://*:5556");
 
-    Timeline* timeline = new Timeline();
+    // Subscriber for a sub socket that receives disconnect commands from the clients
+    zmq::socket_t disconnectSocket{ context, zmq::socket_type::sub };
+    disconnectSocket.connect("tcp://*:5550");
+    disconnectSocket.set(zmq::sockopt::subscribe, "");
 
-    /// Controller for all entities and their physics
-    EntityHandler* entityHandler;
-    entityHandler = new EntityHandler();
+    Timeline* timeline = new Timeline();
 
     N_GameObjectManager* gameObjectManager;
     gameObjectManager = new N_GameObjectManager(timeline);
@@ -160,11 +161,13 @@ int main(int argc, char* argv[]) {
             }
             else if (networkConfigurationSetting == 2) {
                 // If the disconnect message was retrieved, then set active to false
-                // REQ-REP
-                bool receivedDisconnect = false;
-                if (receivedDisconnect) {
+                zmq::message_t disconnectMessage;
+                disconnectSocket.recv(disconnectMessage, zmq::recv_flags::dontwait);
+
+                if (!disconnectMessage.empty()) {
                     std::cout << "Client_" << clientIdentifierCounter << " disconnected due to timeout.\n";
                     clientState->active = false;
+                    gameObjectManager->terminateClient(std::stoi(disconnectMessage.to_string()));
                 }
             }
 
