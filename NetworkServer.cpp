@@ -99,27 +99,27 @@ int main(int argc, char* argv[]) {
         10
     );
 
-    //gameObjectManager->insert(movingBox);
-    //gameObjectManager->insert(movingBox2);
-    //gameObjectManager->insert(movingBox3);
+    gameObjectManager->insert(movingBox);
+    gameObjectManager->insert(movingBox2);
+    gameObjectManager->insert(movingBox3);
 
-    /*std::vector<N_MovingObject*> movingVector = std::vector<N_MovingObject*>();
+    //std::vector<N_MovingObject*> movingVector = std::vector<N_MovingObject*>();
 
-    for (int i = 0; i < 90; i++) {
-        N_MovingObject* movingBox = new N_MovingObject(
-            1.0f, 1.0f,
-            550.0f, 550.0f + (i * 10.0f),
-            32.0f, 32.0f,
-            10.0f,
-            "./Assets/Textures/devTexture0.png",
-            Utils::Vector2D(250.0f, 350.0f),
-            Utils::Vector2D(600.0f, 350.0f),
-            40.0f,
-            10
-        );
-        movingVector.push_back(movingBox);
-        gameObjectManager->insert(movingBox);
-    }*/
+    //for (int i = 0; i < 90; i++) {
+    //    N_MovingObject* movingBox = new N_MovingObject(
+    //        1.0f, 1.0f,
+    //        550.0f, 550.0f + (i * 10.0f),
+    //        32.0f, 32.0f,
+    //        10.0f,
+    //        "./Assets/Textures/devTexture0.png",
+    //        Utils::Vector2D(250.0f, 350.0f),
+    //        Utils::Vector2D(600.0f, 350.0f),
+    //        40.0f,
+    //        10
+    //    );
+    //    movingVector.push_back(movingBox);
+    //    gameObjectManager->insert(movingBox);
+    //}
 
     struct ClientState {
         std::atomic<bool> active{ true };
