@@ -13,35 +13,29 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Entities">
-      <UniqueIdentifier>{4a14b8a3-c110-4e58-9770-80e365f5789a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Entities">
-      <UniqueIdentifier>{d6b1dba6-a591-4af4-b5d1-d1a19d1a6dd4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Utils">
       <UniqueIdentifier>{24351036-3fe0-46f1-87ae-8a247587dbed}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Utils">
       <UniqueIdentifier>{95e9f627-9b2d-4257-9e9c-d685d3a8c84c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Entities\Old">
-      <UniqueIdentifier>{3699be4b-ffe5-4404-82c5-5292bb8834f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Entities\Old">
-      <UniqueIdentifier>{1f99b12b-08c9-4355-b2d6-52571f072e14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Entities\Components">
-      <UniqueIdentifier>{96d815ce-5ab8-4656-9907-51f5f0bffeff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Entities\Components">
-      <UniqueIdentifier>{02b609b9-c36f-4927-9be9-4cbe8d35e5a7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Managers">
       <UniqueIdentifier>{42f6439e-16eb-4182-98e1-6794b03234e1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Managers">
       <UniqueIdentifier>{49e841cc-49a7-4d2b-8e77-43025278d5b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects">
+      <UniqueIdentifier>{4a14b8a3-c110-4e58-9770-80e365f5789a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects\Components">
+      <UniqueIdentifier>{96d815ce-5ab8-4656-9907-51f5f0bffeff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{d6b1dba6-a591-4af4-b5d1-d1a19d1a6dd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects\Components">
+      <UniqueIdentifier>{02b609b9-c36f-4927-9be9-4cbe8d35e5a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,47 +48,32 @@
     <ClCompile Include="networkVector2D.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="networkThread.cpp">
-      <Filter>Source Files\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="networkEntity.cpp">
-      <Filter>Source Files\Entities\Old</Filter>
-    </ClCompile>
-    <ClCompile Include="networkMovingEntity.cpp">
-      <Filter>Source Files\Entities\Old</Filter>
-    </ClCompile>
-    <ClCompile Include="networkPlayer.cpp">
-      <Filter>Source Files\Entities\Old</Filter>
-    </ClCompile>
     <ClCompile Include="n_rigidBody.cpp">
-      <Filter>Source Files\Entities\Components</Filter>
+      <Filter>Source Files\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="n_textureMesh.cpp">
-      <Filter>Source Files\Entities\Components</Filter>
+      <Filter>Source Files\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="n_transform.cpp">
-      <Filter>Source Files\Entities\Components</Filter>
+      <Filter>Source Files\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="n_GameObject.cpp">
-      <Filter>Source Files\Entities</Filter>
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="n_movingPattern.cpp">
-      <Filter>Source Files\Entities\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="entityHandler.cpp">
-      <Filter>Source Files\Managers</Filter>
+      <Filter>Source Files\GameObjects\Components</Filter>
     </ClCompile>
     <ClCompile Include="n_gameObjectManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="n_MovingObject.cpp">
-      <Filter>Source Files\Entities</Filter>
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="n_playerGO.cpp">
-      <Filter>Source Files\Entities</Filter>
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
     <ClCompile Include="n_playerInput.cpp">
-      <Filter>Source Files\Entities\Components</Filter>
+      <Filter>Source Files\GameObjects\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -104,50 +83,35 @@
     <ClInclude Include="networkVector2D.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="networkThread.h">
-      <Filter>Header Files\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="networkEntity.h">
-      <Filter>Header Files\Entities\Old</Filter>
-    </ClInclude>
-    <ClInclude Include="networkMovingEntity.h">
-      <Filter>Header Files\Entities\Old</Filter>
-    </ClInclude>
-    <ClInclude Include="networkPlayer.h">
-      <Filter>Header Files\Entities\Old</Filter>
-    </ClInclude>
     <ClInclude Include="n_GameObject.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="n_component.h">
-      <Filter>Header Files\Entities\Components</Filter>
+      <Filter>Header Files\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="n_rigidBody.h">
-      <Filter>Header Files\Entities\Components</Filter>
+      <Filter>Header Files\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="n_textureMesh.h">
-      <Filter>Header Files\Entities\Components</Filter>
+      <Filter>Header Files\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="n_transform.h">
-      <Filter>Header Files\Entities\Components</Filter>
+      <Filter>Header Files\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="n_movingPattern.h">
-      <Filter>Header Files\Entities\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="entityHandler.h">
-      <Filter>Header Files\Managers</Filter>
+      <Filter>Header Files\GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="n_gameObjectManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="n_MovingObject.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="n_playerGO.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="n_playerInput.h">
-      <Filter>Header Files\Entities\Components</Filter>
+      <Filter>Header Files\GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

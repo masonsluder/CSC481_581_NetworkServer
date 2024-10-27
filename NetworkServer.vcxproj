@@ -134,12 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="n_GameObject.cpp" />
-    <ClCompile Include="networkEntity.cpp" />
-    <ClCompile Include="entityHandler.cpp" />
-    <ClCompile Include="networkMovingEntity.cpp" />
     <ClCompile Include="networkServer.cpp" />
-    <ClCompile Include="networkThread.cpp" />
-    <ClCompile Include="networkPlayer.cpp" />
     <ClCompile Include="networkTimeline.cpp" />
     <ClCompile Include="networkVector2D.cpp" />
     <ClCompile Include="n_gameObjectManager.cpp" />
@@ -153,11 +148,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="n_component.h" />
-    <ClInclude Include="networkEntity.h" />
-    <ClInclude Include="entityHandler.h" />
-    <ClInclude Include="networkMovingEntity.h" />
-    <ClInclude Include="networkThread.h" />
-    <ClInclude Include="networkPlayer.h" />
     <ClInclude Include="networkTimeline.h" />
     <ClInclude Include="networkVector2D.h" />
     <ClInclude Include="n_GameObject.h" />
