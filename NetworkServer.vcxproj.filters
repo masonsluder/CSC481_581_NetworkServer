@@ -37,6 +37,12 @@
     <Filter Include="Source Files\GameObjects\Components">
       <UniqueIdentifier>{02b609b9-c36f-4927-9be9-4cbe8d35e5a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Events">
+      <UniqueIdentifier>{232f73b2-d950-4988-b02e-2fd5bdddb224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Events">
+      <UniqueIdentifier>{d930caad-3bd8-4cfe-bd5d-2a50d4c29066}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="networkServer.cpp">
@@ -75,6 +81,15 @@
     <ClCompile Include="n_playerInput.cpp">
       <Filter>Source Files\GameObjects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="n_instantiateObjectEvent.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="n_moveObjectEvent.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="n_event.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="networkTimeline.h">
@@ -112,6 +127,15 @@
     </ClInclude>
     <ClInclude Include="n_playerInput.h">
       <Filter>Header Files\GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="n_instantiateObjectEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="n_moveObjectEvent.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="n_event.h">
+      <Filter>Header Files\Events</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
