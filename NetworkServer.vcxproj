@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="n_event.cpp" />
+    <ClCompile Include="n_eventManager.cpp" />
     <ClCompile Include="n_GameObject.cpp" />
     <ClCompile Include="networkServer.cpp" />
     <ClCompile Include="networkTimeline.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="networkTimeline.h" />
     <ClInclude Include="networkVector2D.h" />
     <ClInclude Include="n_event.h" />
+    <ClInclude Include="n_eventManager.h" />
     <ClInclude Include="n_GameObject.h" />
     <ClInclude Include="n_gameObjectManager.h" />
     <ClInclude Include="n_instantiateObjectEvent.h" />

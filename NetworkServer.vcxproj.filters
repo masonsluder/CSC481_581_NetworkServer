@@ -90,6 +90,9 @@
     <ClCompile Include="n_event.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
+    <ClCompile Include="n_eventManager.cpp">
+      <Filter>Source Files\Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="networkTimeline.h">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="n_event.h">
       <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="n_eventManager.h">
+      <Filter>Header Files\Managers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
