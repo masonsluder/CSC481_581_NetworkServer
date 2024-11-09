@@ -89,6 +89,14 @@ public:
 	* @param go GameObject to be added to end of the object map
 	*/
 	void insertPlayer(N_PlayerGO* go);
+
+	/**
+	* Finds a GameObject with the given idea, otherwise, returns null
+	*
+	* @param uuid: The ID of the object being serached for
+	* @returns A reference to the GameObject or a nullptr if nothing is found
+	*/
+	N_GameObject* find(int uuid);
 };
 
 #endif
