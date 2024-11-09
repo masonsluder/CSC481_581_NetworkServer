@@ -7,7 +7,7 @@ using json = nlohmann::json;
 namespace N_Events {
 
 	// Constructor used for sending out Event information through a send socket and direct GameObject reference
-	N_InstantiateObjectEvent::N_InstantiateObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_t* socket, int clientIdentifier) {
+	N_InstantiateObjectEvent::N_InstantiateObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_t* socket, int playerID, int clientIdentifier) {
 		// GameObject reference	
 		m_goRefVector = goRef;
 		// Event priorities

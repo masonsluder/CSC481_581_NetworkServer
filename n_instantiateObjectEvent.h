@@ -29,7 +29,7 @@ namespace N_Events {
 	public:
 
 		// Constructor used for sending out Event information through a send socket and direct GameObject reference
-		N_InstantiateObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_t* socket, int clientIdentifier = 0);
+		N_InstantiateObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_t* socket, int playerID = 0, int clientIdentifier = 0);
 
 		// Constructor used for receiving Event information through an already-obtained message and direct GameObject reference
 		N_InstantiateObjectEvent(N_GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString);

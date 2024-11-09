@@ -97,6 +97,13 @@ public:
 	* @returns A reference to the GameObject or a nullptr if nothing is found
 	*/
 	N_GameObject* find(int uuid);
+
+	/**
+	* Converts all objects in the object map into a vector of objects without their keys
+	*
+	* @returns A vector of references to all server GameObjects
+	*/
+	std::vector<N_GameObject*> convertObjectMapToVector();
 };
 
 #endif

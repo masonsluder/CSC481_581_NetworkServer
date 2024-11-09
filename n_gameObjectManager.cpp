@@ -189,3 +189,21 @@ N_GameObject* N_GameObjectManager::find(int uuid) {
 		return nullptr;
 	}
 }
+
+/**
+* Converts all objects in the object map into a vector of objects without their keys
+*
+* @returns A vector of references to all server GameObjects
+*/
+std::vector<N_GameObject*> N_GameObjectManager::convertObjectMapToVector() {
+	// Create iterator to iterate through the Map
+	std::map<int, N_GameObject*>::iterator iter;
+	// Return vector
+	std::vector<N_GameObject*> goVec = std::vector<N_GameObject*>();
+	// Inserts reach GameObject into the vector
+	for (iter = m_objects->begin(); iter != m_objects->end(); ++iter) {
+		// Push GameObject into the GameObject vector
+		goVec.push_back(iter->second);
+	}
+	return goVec;
+}
