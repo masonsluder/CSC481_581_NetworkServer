@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Running server.\n";
     // initialize the zmq context with a single IO thread
-    zmq::context_t context{ 3 };
+    zmq::context_t context{ 4 };
 
     // Thread safe map to manage client threads
     std::unordered_map<int, std::thread> clientThreads;
@@ -218,7 +218,7 @@ int main(int argc, char* argv[]) {
         // Update GameObjects
         gameObjectManager->update();
 
-        // REQ model ready to receive requests from the client.
+        // REP model ready to receive requests from the client.
         zmq::message_t clientIdRequest;
         replyToClient.recv(clientIdRequest, zmq::recv_flags::dontwait);
         // 1 = Client to server, 2 = Peer to Peer
@@ -232,6 +232,7 @@ int main(int argc, char* argv[]) {
 
         // If the client sends a request, start handling sending the reply
         if (!clientIdRequest.empty()) {
+
             clientIdentifierCounter++;
 
             char clientIdentifier[9] = "Client_";
@@ -271,7 +272,7 @@ int main(int argc, char* argv[]) {
             zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + gameObjectString);*/
 
             // Run Instantiate object event, should send event with all object info (including newly created player) to client (all clients in case of player join or disconnect?)
-            eventManager->raiseEvent(new N_Events::N_InstantiateObjectEvent(gameObjectManager->convertObjectMapToVector(), timeline->getTime(), 0, &replyToClient));
+            eventManager->raiseEvent(new N_Events::N_InstantiateObjectEvent(gameObjectManager->convertObjectMapToVector(), timeline->getTime(), 0, &replyToClient, playerGO->getUUID(), clientIdentifierCounter));
 
             // Comment this out when InstantiateObjectEvent is functional
             //replyToClient.send(msg, zmq::send_flags::none);

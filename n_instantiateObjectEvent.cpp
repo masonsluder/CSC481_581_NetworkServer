@@ -17,6 +17,7 @@ namespace N_Events {
 		m_socketRef = socket;
 		// Define client ID for message sending
 		m_clientIdentifier = clientIdentifier;
+		m_playerID = playerID;
 		// Identifier false for onEvent function
 		m_isReceiving = false;
 		// Empty string since it's not relevant in a send until the end
@@ -25,7 +26,7 @@ namespace N_Events {
 	}
 
 	// Constructor used for receiving Event information through an already-obtained message and direct GameObject reference
-	N_InstantiateObjectEvent::N_InstantiateObjectEvent(N_GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString) {
+	N_InstantiateObjectEvent::N_InstantiateObjectEvent(N_GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString, int playerID) {
 		// GameObject reference
 		m_goRefVector = std::vector<N_GameObject*>();
 		// Event priorities
@@ -34,6 +35,7 @@ namespace N_Events {
 		// Socket is null because it is not needed for json parsing, client identifier is also set to 0 (invalid)
 		m_socketRef = nullptr;
 		m_clientIdentifier = 0;
+		m_playerID = playerID;
 		// Identifier for the onEvent function
 		m_isReceiving = true;
 		// The jsonstring to be parsed
@@ -51,7 +53,7 @@ namespace N_Events {
 			json j;
 			to_json(j);
 			// If clientIdentifier is valid (not 0), then send clientIdentifier alongside JSON string
-			std::string eventInfo = m_clientIdentifier != 0 ? std::to_string(m_clientIdentifier) + "\n" + j.dump() : j.dump();
+			std::string eventInfo = m_clientIdentifier != 0 ? "Client_" + std::to_string(m_clientIdentifier) + "\n" + j.dump() : j.dump();
 			zmq::message_t msg(eventInfo);
 			m_socketRef->send(msg, zmq::send_flags::dontwait);
 		}
@@ -69,5 +71,8 @@ namespace N_Events {
 		j["gos"] = gosJson;
 		j["timeStampPriority"] = m_timeStampPriority;
 		j["priority"] = m_priority;
+		if (m_playerID != 0) {
+			j["playerid"] = m_playerID;
+		}
 	}
 }
