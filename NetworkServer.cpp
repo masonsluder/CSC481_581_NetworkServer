@@ -56,6 +56,10 @@ int main(int argc, char* argv[]) {
 
     // construct a REP (reply) socket to send client identifier information back to client
     zmq::socket_t replyToClient{ context, zmq::socket_type::rep };
+    replyToClient.bind("tcp://*:5556");
+
+    // Create a socket_ref to the reply socket for use in Events
+    zmq::socket_ref replyToClientRef = replyToClient;
 
     Timeline* timeline = new Timeline();
 
@@ -123,10 +127,22 @@ int main(int argc, char* argv[]) {
 
         // Sockets to send and receive messages from client
         // (Receive only for Client-Server network setting)
+        zmq::socket_t serverToClientPublisher{ context, zmq::socket_type::pub };
         zmq::socket_t clientToServerSubscriber{ context, zmq::socket_type::sub };
+
+        // Create a socket reference to the server-client publisher to enable use in Events
+        zmq::socket_ref stcPubRef = serverToClientPublisher;
 
         // Subscriber for a sub socket that receives disconnect commands from the clients
         zmq::socket_t disconnectSocket{ context, zmq::socket_type::rep };
+
+
+        // Set conflate to only take most recent message
+        int conflate = 1;
+        zmq_setsockopt(serverToClientPublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
+
+        // Bind publisher to client's port
+        serverToClientPublisher.bind(pubAddress);
 
         // Bind subscriber to client's port
         if (networkConfigurationSetting == 1) {
@@ -176,7 +192,7 @@ int main(int argc, char* argv[]) {
             //serverToClientPublisher.send(msg, zmq::send_flags::dontwait);
 
             // Raises moveobjectevent and sends the event over to the client. 
-            eventManager->raiseEvent(new N_Events::N_MoveObjectEvent(gameObjectManager->convertObjectMapToVector(), timeline->getTime(), 0, pubAddress, clientIdentifierCounter));
+            eventManager->raiseEvent(new N_Events::N_MoveObjectEvent(gameObjectManager->convertObjectMapToVector(), timeline->getTime(), 0, stcPubRef, clientIdentifierCounter));
 
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
 
@@ -210,9 +226,7 @@ int main(int argc, char* argv[]) {
 
         // REP model ready to receive requests from the client.
         zmq::message_t clientIdRequest;
-        replyToClient.bind("tcp://*:5556");
         replyToClient.recv(clientIdRequest, zmq::recv_flags::dontwait);
-        replyToClient.close();
         // 1 = Client to server, 2 = Peer to Peer
 
         if (!clientIdRequest.empty()) {
@@ -264,7 +278,7 @@ int main(int argc, char* argv[]) {
             zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + gameObjectString);*/
 
             // Run Instantiate object event, should send event with all object info (including newly created player) to client (all clients in case of player join or disconnect?)
-            eventManager->raiseEvent(new N_Events::N_InstantiateObjectEvent(gameObjectManager->convertObjectMapToVector(), timeline->getTime(), 0, "tcp://*:5556", playerGO->getUUID(), clientIdentifierCounter));
+            eventManager->raiseEvent(new N_Events::N_InstantiateObjectEvent(gameObjectManager->convertObjectMapToVector(), timeline->getTime(), 0, replyToClientRef, playerGO->getUUID(), clientIdentifierCounter));
 
             // Comment this out when InstantiateObjectEvent is functional
             //replyToClient.send(msg, zmq::send_flags::none);

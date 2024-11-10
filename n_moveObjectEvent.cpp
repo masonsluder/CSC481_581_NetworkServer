@@ -6,14 +6,14 @@ namespace N_Events {
 	/**
 	* Constructor for MoveObjectEvent for outbound events
 	*/
-	N_MoveObjectEvent::N_MoveObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, std::string socketAddress, int clientIdentifier) {
+	N_MoveObjectEvent::N_MoveObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier) {
 		// GameObject reference	
 		m_goRefVector = goRef;
 		// Event priorities
 		m_timeStampPriority = timeStampPriority;
 		m_priority = priority;
 		// Socket address to send out information
-		m_socketAddress = socketAddress;
+		m_socketRef = socketRef;
 		// Define client ID for message sending
 		m_clientIdentifier = clientIdentifier;
 		// Identifier false for onEvent function
@@ -33,7 +33,7 @@ namespace N_Events {
 		m_timeStampPriority = timeStampPriority;
 		m_priority = priority;
 		// Socket address is empty because it is not needed for json parsing, client identifier is also set to 0 (invalid)
-		m_socketAddress = "";
+		m_socketRef = NULL;
 		m_clientIdentifier = 0;
 		// Identifier for the onEvent function
 		m_isReceiving = true;
@@ -43,7 +43,7 @@ namespace N_Events {
 		m_goManagerRef = goManager;
 	}
 
-	void N_MoveObjectEvent::onEvent() const {
+	void N_MoveObjectEvent::onEvent() {
 		if (m_isReceiving) { // If this is receiving a JSON
 
 			// Parse json
@@ -63,24 +63,13 @@ namespace N_Events {
 		}
 		else { // If this is sending out a JSON
 
-			// Create reply socket for REQ-REP initial GameObject initialization on Client join
-			zmq::context_t context{ 1 };
-			zmq::socket_t serverToClientPublisher{ context, zmq::socket_type::pub };
-			serverToClientPublisher.bind(m_socketAddress);
-
-			// Set conflate to only send most recent message
-			int conflate = 1;
-			zmq_setsockopt(serverToClientPublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
-
 			// Convert gameObject and Event data into json format
 			json j;
 			to_json(j);
 			// If clientIdentifier is valid (not 0), then send clientIdentifier alongside JSON string
 			std::string eventInfo = m_clientIdentifier != 0 ? "Client_" + std::to_string(m_clientIdentifier) + "\n" + j.dump() : j.dump();
 			zmq::message_t msg(eventInfo);
-			serverToClientPublisher.send(msg, zmq::send_flags::dontwait);
-			// Close the socket after use is done
-			serverToClientPublisher.close();
+			m_socketRef.send(msg, zmq::send_flags::dontwait);
 		}
 	}
 
