@@ -18,7 +18,7 @@ namespace N_Events {
 		// The client ID used to filter messages, this will not be used if it is passed in as 0
 		int m_clientIdentifier;
 		// Reference to the socket used for sending information out
-		zmq::socket_t* m_socketRef;
+		std::string m_socketAddress;
 		// JSON string to parse with Object Information in it
 		std::string m_jsonString;
 
@@ -30,7 +30,7 @@ namespace N_Events {
 		/**
 		* Constructor for MoveObjectEvent for outbound events
 		*/
-		N_MoveObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_t* socket, int clientIdentifier = 0);
+		N_MoveObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, std::string socketAddress, int clientIdentifier = 0);
 
 		/**
 		* Constructor for MoveObjectEvent for inbound Events

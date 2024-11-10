@@ -7,14 +7,14 @@ using json = nlohmann::json;
 namespace N_Events {
 
 	// Constructor used for sending out Event information through a send socket and direct GameObject reference
-	N_InstantiateObjectEvent::N_InstantiateObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_t* socket, int playerID, int clientIdentifier) {
+	N_InstantiateObjectEvent::N_InstantiateObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, std::string socketAddress, int playerID, int clientIdentifier) {
 		// GameObject reference	
 		m_goRefVector = goRef;
 		// Event priorities
 		m_timeStampPriority = timeStampPriority;
 		m_priority = priority;
 		// Socket refrence to send out information
-		m_socketRef = socket;
+		m_socketAddress = socketAddress;
 		// Define client ID for message sending
 		m_clientIdentifier = clientIdentifier;
 		m_playerID = playerID;
@@ -32,8 +32,8 @@ namespace N_Events {
 		// Event priorities
 		m_timeStampPriority = timeStampPriority;
 		m_priority = priority;
-		// Socket is null because it is not needed for json parsing, client identifier is also set to 0 (invalid)
-		m_socketRef = nullptr;
+		// Socket is empty because it is not needed for json parsing, client identifier is also set to 0 (invalid)
+		m_socketAddress = "";
 		m_clientIdentifier = 0;
 		m_playerID = playerID;
 		// Identifier for the onEvent function
@@ -49,13 +49,22 @@ namespace N_Events {
 			m_goManagerRef->deserialize(m_jsonString, 2);
 		}
 		else { // If the Event is currently sending out a message from this client
+
+			// Create reply socket for REQ-REP initial GameObject initialization on Client join
+			zmq::context_t context { 1 };
+			zmq::socket_t replyToClient { context, zmq::socket_type::rep };
+			replyToClient.connect(m_socketAddress);
+
 			// Convert gameObject and Event data into json format
 			json j;
 			to_json(j);
 			// If clientIdentifier is valid (not 0), then send clientIdentifier alongside JSON string
 			std::string eventInfo = m_clientIdentifier != 0 ? "Client_" + std::to_string(m_clientIdentifier) + "\n" + j.dump() : j.dump();
 			zmq::message_t msg(eventInfo);
-			m_socketRef->send(msg, zmq::send_flags::dontwait);
+			replyToClient.send(msg, zmq::send_flags::dontwait);
+			// Closes the socket
+			replyToClient.close();
+
 		}
 	}
 
