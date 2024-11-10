@@ -9,6 +9,8 @@
 #include <queue>
 #include <vector>
 #include <typeindex>
+#include <shared_mutex>
+#include <mutex>
 
 class N_GameObject;
 
@@ -19,6 +21,9 @@ private:
 	std::priority_queue<N_Events::N_Event*, std::vector<N_Events::N_Event*>, std::greater<N_Events::N_Event*>> m_eventQueue;
 	// Maintains the history of all GameObjects that are registered to a given Event
 	std::map<std::type_index, std::vector<N_GameObject*>> m_eventRegistry;
+
+	// Mutexes used to lock Event queue so that it doesn't error
+	std::mutex m_mutex;
 
 	/**
 	* Private helper function that returns a copy of the top of the event queue
