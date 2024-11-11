@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef N_MOVEOBJECTEVENT_H
-#define N_MOVEOBJECTEVENT_H
+#ifndef N_UPDATEOBJECTEVENT_H
+#define N_UPDATEOBJECTEVENT_H
 
 
 #include "n_event.h"
@@ -11,7 +11,7 @@
 #include <zmq.hpp>
 
 namespace N_Events {
-	class N_MoveObjectEvent : public virtual N_Event {
+	class N_UpdateObjectEvent : public virtual N_Event {
 	private:
 		// Whether or not the Event is receiving or sending out data
 		bool m_isReceiving;
@@ -28,14 +28,14 @@ namespace N_Events {
 	public:
 
 		/**
-		* Constructor for MoveObjectEvent for outbound events
+		* Constructor for UpdateObjectEvent for outbound events
 		*/
-		N_MoveObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier = 0);
+		N_UpdateObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier = 0);
 
 		/**
-		* Constructor for MoveObjectEvent for inbound Events
+		* Constructor for UpdateObjectEvent for inbound Events
 		*/
-		N_MoveObjectEvent(N_GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString);
+		N_UpdateObjectEvent(N_GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString);
 
 		/**
 		* The function that parses or sends out information on positional data changes

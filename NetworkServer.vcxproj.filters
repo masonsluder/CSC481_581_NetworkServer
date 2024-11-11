@@ -84,7 +84,7 @@
     <ClCompile Include="n_instantiateObjectEvent.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
-    <ClCompile Include="n_moveObjectEvent.cpp">
+    <ClCompile Include="n_updateObjectEvent.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
     <ClCompile Include="n_event.cpp">
@@ -134,7 +134,7 @@
     <ClInclude Include="n_instantiateObjectEvent.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
-    <ClInclude Include="n_moveObjectEvent.h">
+    <ClInclude Include="n_updateObjectEvent.h">
       <Filter>Header Files\Events</Filter>
     </ClInclude>
     <ClInclude Include="n_event.h">

@@ -15,7 +15,7 @@
 #include "n_MovingObject.h"
 #include "n_playerGO.h"
 
-#include "n_moveObjectEvent.h"
+#include "n_updateObjectEvent.h"
 #include "n_instantiateObjectEvent.h"
 
 #include "json.hpp"
@@ -188,11 +188,11 @@ int main(int argc, char* argv[]) {
             //gameObjectManager->serialize(gameObjectString, true);
             //zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + gameObjectString);
 
-            //// Comment out when MoveObjectEvent works
+            //// Comment out when UpdateObjectEvent works
             //serverToClientPublisher.send(msg, zmq::send_flags::dontwait);
 
-            // Raises moveobjectevent and sends the event over to the client. 
-            eventManager->raiseEvent(new N_Events::N_MoveObjectEvent(gameObjectManager->convertObjectMapToVector(), timeline->getTime(), 0, stcPubRef, clientIdentifierCounter));
+            // Raises updateobjectevent and sends the event over to the client. 
+            eventManager->raiseEvent(new N_Events::N_UpdateObjectEvent(gameObjectManager->convertObjectMapToVector(), timeline->getTime(), 0, stcPubRef, clientIdentifierCounter));
 
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
 

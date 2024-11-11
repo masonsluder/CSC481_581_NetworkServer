@@ -1,12 +1,11 @@
-#include "n_moveObjectEvent.h"
-
+#include "n_updateObjectEvent.h"
 
 namespace N_Events {
 
 	/**
-	* Constructor for MoveObjectEvent for outbound events
+	* Constructor for UpdateObjectEvent for outbound events
 	*/
-	N_MoveObjectEvent::N_MoveObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier) {
+	N_UpdateObjectEvent::N_UpdateObjectEvent(std::vector<N_GameObject*> goRef, int64_t timeStampPriority, int priority, zmq::socket_ref socketRef, int clientIdentifier) {
 		// GameObject reference	
 		m_goRefVector = goRef;
 		// Event priorities
@@ -24,9 +23,9 @@ namespace N_Events {
 	}
 
 	/**
-	* Constructor for MoveObjectEvent for inbound Events
+	* Constructor for UpdateObjectEvent for inbound Events
 	*/
-	N_MoveObjectEvent::N_MoveObjectEvent(N_GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString) {
+	N_UpdateObjectEvent::N_UpdateObjectEvent(N_GameObjectManager* goManager, int64_t timeStampPriority, int priority, std::string jsonString) {
 		// GameObject reference
 		m_goRefVector = std::vector<N_GameObject*>();
 		// Event priorities
@@ -43,7 +42,7 @@ namespace N_Events {
 		m_goManagerRef = goManager;
 	}
 
-	void N_MoveObjectEvent::onEvent() {
+	void N_UpdateObjectEvent::onEvent() {
 		if (m_isReceiving) { // If this is receiving a JSON
 
 			// Parse json
@@ -77,7 +76,7 @@ namespace N_Events {
 	/*
 	* Converts the Event to json for serialization across clients and server
 	*/
-	void N_MoveObjectEvent::to_json(json& j) const {
+	void N_UpdateObjectEvent::to_json(json& j) const {
 		// Add all fields to the json
 		json gosJson;
 		// Iterate through all of the GameObjects
