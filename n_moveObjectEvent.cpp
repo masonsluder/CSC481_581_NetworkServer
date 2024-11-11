@@ -82,23 +82,26 @@ namespace N_Events {
 		json gosJson;
 		// Iterate through all of the GameObjects
 		for (N_GameObject* go : m_goRefVector) {
-			// JSON object to store positional information
 			json gameObjectJson;
+
 			{
 				std::lock_guard<std::mutex> lock(go->mutex);
-				// Set UUID
-				gameObjectJson["uuid"] = go->getUUID();
-				// Set Position
-				Utils::Vector2D position = *go->getComponent<N_Components::N_Transform>()->getPosition();
-				gameObjectJson["position"] = {
-					{"x", position.x},
-					{"y", position.y}
-				};
+				// Push the JSON into the list of GameObjects
+				// If player, send all info
 				if (go->getComponent<N_Components::N_PlayerInputPlatformer>()) {
+					go->to_json(gameObjectJson);
 					// Push GameObject into the players list
 					gosJson["players"].push_back(gameObjectJson);
 				}
-				else {
+				else { // If movingObject, send positional info only
+					// Set UUID
+					gameObjectJson["uuid"] = go->getUUID();
+					// Set Position
+					Utils::Vector2D position = *go->getComponent<N_Components::N_Transform>()->getPosition();
+					gameObjectJson["position"] = {
+						{"x", position.x},
+						{"y", position.y}
+					};
 					// Push GameObject in the list of MovingObjects
 					gosJson["moving"].push_back(gameObjectJson);
 				}
