@@ -23,7 +23,7 @@ private:
 	std::map<std::type_index, std::vector<N_GameObject*>> m_eventRegistry;
 
 	// Mutexes used to lock Event queue so that it doesn't error
-	std::mutex m_mutex;
+	std::recursive_mutex m_mutex;
 
 	/**
 	* Private helper function that returns a copy of the top of the event queue

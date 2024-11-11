@@ -37,7 +37,7 @@ void N_EventManager::registerEvent(N_GameObject* gameObject) {
 * @param Event to add
 */
 void N_EventManager::raiseEvent(N_Events::N_Event* event) {
-	std::lock_guard<std::mutex> queueLock(m_mutex);
+	std::lock_guard<std::recursive_mutex> queueLock(m_mutex);
 	m_eventQueue.push(event);
 }
 
@@ -104,7 +104,7 @@ N_Events::N_Event* N_EventManager::getEventQueueTop() const {
 * meet the time and priority requirements
 */
 void N_EventManager::dispatchEvents(int64_t timeStamp) {
-	std::lock_guard<std::mutex> queueLock(m_mutex);
+	std::lock_guard<std::recursive_mutex> queueLock(m_mutex);
 	// Return if the event queue is empty
 	if (m_eventQueue.empty()) {
 		return;
