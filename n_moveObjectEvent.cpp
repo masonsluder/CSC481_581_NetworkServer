@@ -56,6 +56,7 @@ namespace N_Events {
 
 				// Check if the Object exists
 				if (N_GameObject* go = m_goManagerRef->find(uuid)) {
+					std::lock_guard<std::mutex> lock(go->mutex);
 					// Set transform position
 					go->getComponent<N_Components::N_Transform>()->setPosition(obj["position"]["x"].get<float>(), obj["position"]["y"].get<float>());
 				}
@@ -83,20 +84,24 @@ namespace N_Events {
 		for (N_GameObject* go : m_goRefVector) {
 			// JSON object to store positional information
 			json gameObjectJson;
-			// Set UUID
-			gameObjectJson["uuid"] = go->getUUID();
-			// Set Position
-			Utils::Vector2D position = *go->getComponent<N_Components::N_Transform>()->getPosition();
-			gameObjectJson["position"] = {
-				{"x", position.x},
-				{"y", position.y}
-			};
-			if (go->getComponent<N_Components::N_PlayerInputPlatformer>()) {
-				// Push GameObject into the players list
-				gosJson["players"].push_back(gameObjectJson);
-			} else {
-				// Push GameObject in the list of MovingObjects
-				gosJson["moving"].push_back(gameObjectJson);
+			{
+				std::lock_guard<std::mutex> lock(go->mutex);
+				// Set UUID
+				gameObjectJson["uuid"] = go->getUUID();
+				// Set Position
+				Utils::Vector2D position = *go->getComponent<N_Components::N_Transform>()->getPosition();
+				gameObjectJson["position"] = {
+					{"x", position.x},
+					{"y", position.y}
+				};
+				if (go->getComponent<N_Components::N_PlayerInputPlatformer>()) {
+					// Push GameObject into the players list
+					gosJson["players"].push_back(gameObjectJson);
+				}
+				else {
+					// Push GameObject in the list of MovingObjects
+					gosJson["moving"].push_back(gameObjectJson);
+				}
 			}
 		}
 		j["gos"] = gosJson;
