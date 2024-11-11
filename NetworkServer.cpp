@@ -251,11 +251,15 @@ int main(int argc, char* argv[]) {
                 250.0f, 250.0f,
                 15.0f, 25.0f,
                 100.0f,
-                "./Assets/Textures/DefaultPlayerTexture1.png",
+                "./Assets/Textures/CharacterTexture1.png",
                 false,
                 0.0f, -3000.0f,
                 100.0f
             );
+
+            if (clientIdentifierCounter == 2) {
+                playerGO->getComponent<N_Components::N_TextureMesh>()->setTextureFilePath("./Assets/Textures/DefaultPlayerTexture1.png");
+            }
 
             // Add player to GameObjectManager
             gameObjectManager->insert(playerGO);
