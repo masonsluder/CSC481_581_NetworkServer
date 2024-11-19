@@ -13,6 +13,7 @@ using json = nlohmann::json;
 #include <iostream>
 #include <map>
 #include <vector>
+#include <mutex>
 
 /*
 * Some references include: https://www.gamedeveloper.com/design/the-entity-component-system---an-awesome-game-design-pattern-in-c-part-1-
@@ -28,8 +29,11 @@ protected:
     // The deltaTime for the object passed down by the Manager
     double m_currTimeStep;
 
-    // Put stuff in struct?
 public:
+
+    // Mutex used to lock the gameObject to prevent null accesses
+    std::mutex mutex;
+
     // Default constructor for GameObject. Adds a Transform component (required)
     N_GameObject();
 

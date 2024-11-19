@@ -9,19 +9,19 @@
 #include <unordered_map>
 #include <mutex>
 
-#include "networkthread.h"
-#include "entityHandler.h"
-#include "networkEntity.h"
-#include "networkMovingEntity.h"
-#include "networkPlayer.h"
 #include "networkTimeline.h"
 #include "n_gameObjectManager.h"
 
 #include "n_MovingObject.h"
 #include "n_playerGO.h"
 
+#include "n_updateObjectEvent.h"
+#include "n_instantiateObjectEvent.h"
+
 #include "json.hpp"
+#include "n_eventManager.h"
 using json = nlohmann::json;
+
 
 // Struct that stores simple client identification information
 typedef struct {
@@ -58,10 +58,17 @@ int main(int argc, char* argv[]) {
     zmq::socket_t replyToClient{ context, zmq::socket_type::rep };
     replyToClient.bind("tcp://*:5556");
 
+    // Create a socket_ref to the reply socket for use in Events
+    zmq::socket_ref replyToClientRef = replyToClient;
+
     Timeline* timeline = new Timeline();
 
+    // Network Game Object Manager
     N_GameObjectManager* gameObjectManager;
     gameObjectManager = new N_GameObjectManager(timeline);
+
+    // Network Event Manager
+    N_EventManager* eventManager = new N_EventManager();
 
     N_MovingObject* movingBox = new N_MovingObject(
         1.0f, 1.0f,
@@ -103,24 +110,6 @@ int main(int argc, char* argv[]) {
     gameObjectManager->insert(movingBox2);
     gameObjectManager->insert(movingBox3);
 
-    //std::vector<N_MovingObject*> movingVector = std::vector<N_MovingObject*>();
-
-    //for (int i = 0; i < 90; i++) {
-    //    N_MovingObject* movingBox = new N_MovingObject(
-    //        1.0f, 1.0f,
-    //        550.0f, 550.0f + (i * 10.0f),
-    //        32.0f, 32.0f,
-    //        10.0f,
-    //        "./Assets/Textures/devTexture0.png",
-    //        Utils::Vector2D(250.0f, 350.0f),
-    //        Utils::Vector2D(600.0f, 350.0f),
-    //        40.0f,
-    //        10
-    //    );
-    //    movingVector.push_back(movingBox);
-    //    gameObjectManager->insert(movingBox);
-    //}
-
     struct ClientState {
         std::atomic<bool> active{ true };
         std::chrono::time_point<std::chrono::steady_clock> lastHeartbeat;
@@ -130,52 +119,48 @@ int main(int argc, char* argv[]) {
     std::mutex clientStateMutex;
 
     auto handleClient = [&](int clientIdentifierCounter, N_PlayerGO* playerGO) {
-        int portNum = 6658 + clientIdentifierCounter;
-        int portNum2 = 6558 + clientIdentifierCounter;
+        int portPub = 6658 + clientIdentifierCounter;
+        int portSub = 6558 + clientIdentifierCounter;
 
-        //std::stringstream ss;
-        //ss << "tcp://*:" << portNum;
-        //std::stringstream ss2;
-        //ss2 << "tcp://*:" << portNum2;
-
-        const std::string ss = "tcp://*:" + std::to_string(portNum);
-        const std::string ss2 = "tcp://*:" + std::to_string(portNum2);
+        const std::string pubAddress = "tcp://*:" + std::to_string(portPub);
+        const std::string subAddress = "tcp://*:" + std::to_string(portSub);
 
         // Sockets to send and receive messages from client
         // (Receive only for Client-Server network setting)
         zmq::socket_t serverToClientPublisher{ context, zmq::socket_type::pub };
         zmq::socket_t clientToServerSubscriber{ context, zmq::socket_type::sub };
 
+        // Create a socket reference to the server-client publisher to enable use in Events
+        zmq::socket_ref stcPubRef = serverToClientPublisher;
+
         // Subscriber for a sub socket that receives disconnect commands from the clients
         zmq::socket_t disconnectSocket{ context, zmq::socket_type::rep };
-        
+
 
         // Set conflate to only take most recent message
         int conflate = 1;
         zmq_setsockopt(serverToClientPublisher, ZMQ_CONFLATE, &conflate, sizeof(conflate));
-        
+
         // Bind publisher to client's port
-        serverToClientPublisher.bind(ss);
+        serverToClientPublisher.bind(pubAddress);
 
         // Bind subscriber to client's port
         if (networkConfigurationSetting == 1) {
-            clientToServerSubscriber.bind(ss2);
+            clientToServerSubscriber.bind(subAddress);
         }
         disconnectSocket.bind("tcp://*:" + std::to_string(4558 + playerGO->getUUID()));
         
         // Subscribe to messages related to client
         clientToServerSubscriber.set(zmq::sockopt::subscribe, "");
-        
-        //disconnectSocket.set(zmq::sockopt::reply, std::to_string(playerGO->getUUID()));
 
-        std::cout << "Server bound to ports: " << portNum << " and " << portNum2 << "\n";
+        std::cout << "Server bound to ports: " << portPub << " and " << portSub << "\n";
 
         auto& clientState = clientStates[clientIdentifierCounter];
         clientState->lastHeartbeat = std::chrono::steady_clock::now();
 
         // Main loop to send and receive messages for client
         while (clientState->active) {
-            // TODO: Add receiving client messages for Client-Server network setting
+            // Receiving client messages for Client-Server network setting
             if (networkConfigurationSetting == 1) {
                 zmq::message_t clientInfo;
                 clientToServerSubscriber.recv(clientInfo, zmq::recv_flags::dontwait);
@@ -198,15 +183,16 @@ int main(int argc, char* argv[]) {
             }
 
             // Send all entity information to every client.
-            std::string gameObjectString;
-            gameObjectManager->serialize(gameObjectString, true);
-            zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + gameObjectString);
+            // Don't need the string if just updating movingObjects right now, but needs the vector of objects to update the position of
+            //std::string gameObjectString;
+            //gameObjectManager->serialize(gameObjectString, true);
+            //zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + gameObjectString);
 
-            zmq::send_result_t result = serverToClientPublisher.send(msg, zmq::send_flags::dontwait);
-            if (result) {
-                //std::cout << "Result: " << result.value() << "\n";
-                //clientState->lastHeartbeat = std::chrono::steady_clock::now();
-            }
+            //// Comment out when UpdateObjectEvent works
+            //serverToClientPublisher.send(msg, zmq::send_flags::dontwait);
+
+            // Raises updateobjectevent and sends the event over to the client. 
+            eventManager->raiseEvent(new N_Events::N_UpdateObjectEvent(gameObjectManager->convertObjectMapToVector(), timeline->getTime(), 0, stcPubRef, clientIdentifierCounter));
 
             std::this_thread::sleep_for(std::chrono::milliseconds(15));
 
@@ -238,7 +224,7 @@ int main(int argc, char* argv[]) {
         // Update GameObjects
         gameObjectManager->update();
 
-        // REQ model ready to receive requests from the client.
+        // REP model ready to receive requests from the client.
         zmq::message_t clientIdRequest;
         replyToClient.recv(clientIdRequest, zmq::recv_flags::dontwait);
         // 1 = Client to server, 2 = Peer to Peer
@@ -252,6 +238,7 @@ int main(int argc, char* argv[]) {
 
         // If the client sends a request, start handling sending the reply
         if (!clientIdRequest.empty()) {
+
             clientIdentifierCounter++;
 
             char clientIdentifier[9] = "Client_";
@@ -264,11 +251,15 @@ int main(int argc, char* argv[]) {
                 250.0f, 250.0f,
                 15.0f, 25.0f,
                 100.0f,
-                "./Assets/Textures/DefaultPlayerTexture1.png",
+                "./Assets/Textures/CharacterTexture1.png",
                 false,
                 0.0f, -3000.0f,
                 100.0f
             );
+
+            if (clientIdentifierCounter == 2) {
+                playerGO->getComponent<N_Components::N_TextureMesh>()->setTextureFilePath("./Assets/Textures/DefaultPlayerTexture1.png");
+            }
 
             // Add player to GameObjectManager
             gameObjectManager->insert(playerGO);
@@ -280,10 +271,21 @@ int main(int argc, char* argv[]) {
             clientList.push_back(newClient);
 
             // Generate json_string for the player
-            json j;
-            playerGO->to_json(j);
-            zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + j.dump());
-            replyToClient.send(msg, zmq::send_flags::none);
+            //json j;
+            // Change to send over ALL information with InstantiateObjectEvent
+            //playerGO->to_json(j);
+            //zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + j.dump());
+
+            // Like the following:
+            /*std::string gameObjectString;
+            gameObjectManager->serialize(gameObjectString, true);
+            zmq::message_t msg("Client_" + std::to_string(clientIdentifierCounter) + "\n" + gameObjectString);*/
+
+            // Run Instantiate object event, should send event with all object info (including newly created player) to client (all clients in case of player join or disconnect?)
+            eventManager->raiseEvent(new N_Events::N_InstantiateObjectEvent(gameObjectManager->convertObjectMapToVector(), timeline->getTime(), 0, replyToClientRef, playerGO->getUUID(), clientIdentifierCounter));
+
+            // Comment this out when InstantiateObjectEvent is functional
+            //replyToClient.send(msg, zmq::send_flags::none);
 
             // Start new thread to handle client
             {
@@ -311,7 +313,8 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
-
+        // Dispatch any events that are ready to go
+        eventManager->dispatchEvents(timeline->getTime());
         // Make so that server only sends every 1/40th of a second or so
         std::this_thread::sleep_for(std::chrono::milliseconds(15));
     }

@@ -40,7 +40,10 @@ void N_GameObjectManager::update() {
 		// Get GameObject
 		N_GameObject* go = iter->second;
 		// Update each GameObject component
-		go->update(deltaTimeInSecs);
+		{
+			std::lock_guard<std::mutex> lock(go->mutex);
+			go->update(deltaTimeInSecs);
+		}
 		// No updating collisions on server
 	}
 }
@@ -53,7 +56,6 @@ void N_GameObjectManager::update() {
 * @param networkType: defines the type of network being used (1=client2server, 2=peer2peer)
 */
 void N_GameObjectManager::deserialize(std::string gameObjectString, int networkType) {
-	// TODO: Create new serialization function for MovingObjects once that's implemented into the Server
 	json j = json::parse(gameObjectString);
 
 	// Loop through objects in JSON array
@@ -66,8 +68,11 @@ void N_GameObjectManager::deserialize(std::string gameObjectString, int networkT
 			insert(go);
 		}
 		else { // If it's an existing game object
-			N_GameObject* go = m_objects->at(uuid);//
-			go->from_json(obj);
+			N_GameObject* go = m_objects->at(uuid);
+			{
+				std::lock_guard<std::mutex> lock(go->mutex);
+				go->from_json(obj);
+			}
 		}
 	}
 
@@ -91,13 +96,19 @@ void N_GameObjectManager::deserializeClient(std::string gameObjectString, int ne
 	// Determine whether the object is new or existing
 	if (!m_players->count(uuid)) { // If it's a new game object
 		N_PlayerGO* go = m_players->at(uuid);
-		go->from_json(j);
+		{
+			std::lock_guard<std::mutex> lock(go->mutex);
+			go->from_json(j);
+		}
 		// Insert new object into the map
 		insertPlayer(go);
 	}
 	else { // If it's an existing game object
 		N_PlayerGO* go = m_players->at(uuid);
-		go->from_json(j);
+		{
+			std::lock_guard<std::mutex> lock(go->mutex);
+			go->from_json(j);
+		}
 	}
 	// Handle network type if necessary
 }
@@ -116,7 +127,10 @@ void N_GameObjectManager::serialize(std::string& outputString, bool includePlaye
 	for (const auto& [id, go] : *m_objects) {
 		if (includePlayers || !includePlayers && !go->getComponent<N_Components::N_PlayerInputPlatformer>()) {
 			json gameObjectJson;
-			go->to_json(gameObjectJson);
+			{
+				std::lock_guard<std::mutex> lock(go->mutex);
+				go->to_json(gameObjectJson);
+			}
 			j.push_back(gameObjectJson);
 		}
 	}
@@ -173,4 +187,37 @@ void N_GameObjectManager::insertPlayer(N_PlayerGO* go) {
 
 	// Adds players into the map
 	m_players->insert_or_assign(go->getUUID(), go);
+}
+
+/**
+* Finds a GameObject with the given idea, otherwise, returns null
+*
+* @param uuid: The ID of the object being serached for
+* @returns A reference to the GameObject or a nullptr if nothing is found
+*/
+N_GameObject* N_GameObjectManager::find(int uuid) {
+	try { // Try finding a GameObject in the objectMap
+		return m_objects->at(uuid);
+	}
+	catch (std::out_of_range& e) { // If there is no GameObject at the given ID, return nullptr
+		return nullptr;
+	}
+}
+
+/**
+* Converts all objects in the object map into a vector of objects without their keys
+*
+* @returns A vector of references to all server GameObjects
+*/
+std::vector<N_GameObject*> N_GameObjectManager::convertObjectMapToVector() {
+	// Create iterator to iterate through the Map
+	std::map<int, N_GameObject*>::iterator iter;
+	// Return vector
+	std::vector<N_GameObject*> goVec = std::vector<N_GameObject*>();
+	// Inserts reach GameObject into the vector
+	for (iter = m_objects->begin(); iter != m_objects->end(); ++iter) {
+		// Push GameObject into the GameObject vector
+		goVec.push_back(iter->second);
+	}
+	return goVec;
 }
